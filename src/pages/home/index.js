@@ -1,6 +1,7 @@
 import ReactMarkdown from "react-markdown"
 import mdStr from "@/mocks/markdown"
 import "./index.scss"
+import {useEffect} from "react";
 
 /**
  * description： 首页
@@ -9,6 +10,10 @@ import "./index.scss"
  */
 
 function Home() {
+	useEffect(()=>{
+		
+	}, [])
+	
 	return (
 		<div className="home">
 			<div className="home-left">
