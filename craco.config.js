@@ -4,6 +4,7 @@
  */
 
 const path = require("path");
+const webpack = require("webpack");
 
 module.exports = {
   devServer: {
@@ -11,6 +12,20 @@ module.exports = {
   },
   webpack: {
     publicPath: "./",
+    configure: (webpackConfig, {env, paths}) => {
+      webpackConfig.resolve.fallback = {
+        "buffer": require.resolve("buffer")
+      };
+      webpackConfig.module.rules.push(
+        {
+          test: /\.m?js$/,
+          resolve: {
+            fullySpecified: false
+          },
+        }),
+      webpackConfig.ignoreWarnings = [/Failed to parse source map/];
+      return webpackConfig;
+    },
     alias: {
       "@": path.resolve("src"),
       "@statics": path.resolve(__dirname, "src/statics"),
@@ -21,6 +36,12 @@ module.exports = {
       "@redux": path.resolve(__dirname, "src/redux"),
       "@styles": path.resolve(__dirname, "src/styles")
     },
+    plugins: [
+      new webpack.ProvidePlugin({
+        process: "process/browser",
+        Buffer: ["buffer", "Buffer"],
+      }),
+    ]
   },
   eslint: {
     enable: false,

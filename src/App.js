@@ -8,18 +8,6 @@ import CherryMarkdown from "@/pages/cherry-markdown";
 import mdStr from "@/mocks/markdown";
 
 function App() {
-	useEffect(() => {
-		md2json(mdStr)
-	}, [])
-	
-	/**
-	 * markdown转json
-	 * @param str
-	 */
-	const md2json = str => {
-		let list = _.split(str, "\n")
-		console.log(list, "listlistlistlistlistlistlistlistlistlistlistlist")
-	}
 
 	return (
 		<div className="App">
