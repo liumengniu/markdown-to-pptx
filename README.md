@@ -1,5 +1,5 @@
 # 依赖库
 
-gray-matter - 将字符串或者文件里的数据格式化成你想要的格式
+remark - 所有和markdown相关的操作（包括解析，转文件，转各种格式，渲染html等）
 
 markdown-it - 将markdown转换成html格式
