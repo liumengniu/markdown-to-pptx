@@ -29,9 +29,9 @@ function Home() {
 		let res = md.renderInline(mdStr)
 		
 		const tree = fromMarkdown(mdStr)
+		const treeStr = toString(tree)
 		
-		
-		console.log(res, 'resresresresresresresresresres', tree)
+		console.log(res, 'resresresresresresresresresres', tree, treeStr)
 	}
 	
 	return (
