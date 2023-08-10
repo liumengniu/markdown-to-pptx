@@ -3,6 +3,10 @@ import mdStr from "@/mocks/markdown"
 import "./index.scss"
 import {useEffect} from "react";
 import {unified} from 'unified'
+import remarkParse from 'remark-parse'
+import {fromMarkdown} from 'mdast-util-from-markdown'
+import {toString} from 'mdast-util-to-string'
+
 
 
 const MarkdownIt = require('markdown-it');
@@ -24,7 +28,10 @@ function Home() {
 		let md = new MarkdownIt();
 		let res = md.renderInline(mdStr)
 		
-		console.log(res, 'resresresresresresresresresres', res2)
+		const tree = fromMarkdown(mdStr)
+		
+		
+		console.log(res, 'resresresresresresresresresres', tree)
 	}
 	
 	return (

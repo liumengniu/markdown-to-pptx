@@ -18,7 +18,10 @@ function CherryMarkdown() {
 				{mdStr}
 			</div>
 			<div className="md-right">
-				<ReactMarkdown children={mdStr}/>
+				<ReactMarkdown children={mdStr} Components = {{
+					h1 : ({ node , ... props })  =>  < span  style = {{ color : 'red' }}  { ... props }  /> ,
+					em : ({ node , ... props })  =>  < i  style = {{ color : 'red' }}  { ... props }  />
+				}} />
 			</div>
 		
 		</div>
