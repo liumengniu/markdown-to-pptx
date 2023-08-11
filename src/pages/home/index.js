@@ -33,7 +33,7 @@ function Home() {
 		let res = md.render(mdStr)
 		
 		const tree = fromMarkdown(mdStr)
-		const table = toc(tree, {tight: true, ordered: true})
+		const table = toc(tree, {tight: false, ordered: true})
 		setData(tree)
 		console.log(tree,'============================================',  table)
 		console.dir(table, {depth: 2})
@@ -47,7 +47,8 @@ function Home() {
 					_.map(data?.children, (o, idx)=>{
 						if(!_.isNil(o?.depth)) level = o?.depth;
 						return (
-							<div className={`${o?.depth ? 'depth-'+ o?.depth : '' } tree-item`} style={{ marginLeft: o?.type === "paragraph" ? level *30 + "px" : (o?.depth -1) *30 + "px"}} key={idx}>
+							<div className={`${o?.depth ? 'depth-'+ o?.depth : '' } tree-item`} style={{ paddingLeft: o?.type === "paragraph" ? level *30 + "px" : (o?.depth -1) *30 + "px"}} key={idx}>
+								<div className="tree-item-line"/>
 								<div className="tree-item-point"/>
 								<div className="tree-item-content">{_.get(o, `children.0.value`)}</div>
 							</div>
