@@ -10,6 +10,7 @@
     "lodash": "^4.17.21",
     "markdown-it": "^13.0.1",
     "mdast-util-to-string": "^4.0.0",
+    "mdast-util-toc": "^7.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-markdown": "^8.0.7",
