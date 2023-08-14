@@ -50,8 +50,13 @@ function Home() {
 	/**
 	 * 编辑左侧md树
 	 */
-	const handleEditMd = () =>{
-	
+	const handleEditMd = (e, idx) =>{
+		const value = e.target.textContent;
+		let item = _.get(data, `children.${idx}`)
+		_.set(item, `children.${0}.value`, value)
+		let newData = _.cloneDeep(data) || [];
+		newData.children[idx] = item;
+		renderHtml(newData)
 	}
 	
 	const renderTree = ()=>{
@@ -65,7 +70,7 @@ function Home() {
 							<div className={`${o?.depth ? 'depth-'+ o?.depth : '' } tree-item`} style={{ paddingLeft: o?.type === "paragraph" ? level *30 + "px" : (o?.depth -1) *30 + "px"}} key={idx}>
 								<div className="tree-item-line"/>
 								<div className="tree-item-point"/>
-								<div className="tree-item-content">{_.get(o, `children.0.value`)}</div>
+								<div className="tree-item-content" onInput={(e)=>handleEditMd(e, idx)}>{_.get(o, `children.0.value`)}</div>
 							</div>
 						)
 					})
