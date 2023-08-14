@@ -5,7 +5,8 @@ import {useEffect, useState} from "react";
 import {unified} from 'unified'
 import remarkParse from 'remark-parse'
 import {fromMarkdown} from 'mdast-util-from-markdown'
-import {definitions} from 'mdast-util-definitions'
+import {toHtml} from 'hast-util-to-html'
+import {toHast} from 'mdast-util-to-hast'
 import {toc} from 'mdast-util-toc'
 import {toString} from 'mdast-util-to-string'
 import _ from "lodash"
@@ -19,7 +20,7 @@ const MarkdownIt = require('markdown-it');
 
 function Home() {
 	const [data, setData] = useState([])
-	
+	const [html, setHtml] = useState(null)
 	
 	useEffect(()=>{
 		initData();
@@ -31,12 +32,26 @@ function Home() {
 	const initData = ()=>{
 		let md = new MarkdownIt();
 		let res = md.render(mdStr)
-		
 		const tree = fromMarkdown(mdStr)
-		const table = toc(tree, {tight: false, ordered: true})
+		renderHtml(tree)
+		const str =  toString(tree)
+		const table = toc(tree)
 		setData(tree)
-		console.log(tree,'============================================',  table)
-		console.dir(table, {depth: 2})
+		console.log(tree,'============================================',  str)
+	}
+	/**
+	 * 根据左侧的编辑 - 渲染最新的html
+	 */
+	const renderHtml = mdast =>{
+		const hast = toHast(mdast)
+		const lastHtml = toHtml(hast)
+		setHtml(lastHtml)
+	}
+	/**
+	 * 编辑左侧md树
+	 */
+	const handleEditMd = () =>{
+	
 	}
 	
 	const renderTree = ()=>{
@@ -79,7 +94,7 @@ function Home() {
 				{/*{renderItem()}*/}
 			</div>
 			<div className="md-right">
-				<ReactMarkdown children={mdStr}/>
+				<div dangerouslySetInnerHTML={{ __html: html }}></div>
 			</div>
 		</div>
 	)
