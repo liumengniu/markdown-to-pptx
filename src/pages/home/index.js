@@ -81,8 +81,11 @@ function Home() {
 							     key={idx}>
 								<div className="tree-item-line"/>
 								<div className="tree-item-point"/>
-								<div className="tree-item-content" contentEditable={true}
+								<div className="tree-item-content" contentEditable={true} suppressContentEditableWarning={true}
 								     onInput={(e) => handleEditMd(e, idx)}>{_.get(o, `children.0.value`)}</div>
+								{
+									_.get(o, `children.0.type`) === "image" && <img src={_.get(o, `children.0.url`)} alt=""/>
+								}
 							</div>
 						)
 					})

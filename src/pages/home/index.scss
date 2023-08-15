@@ -13,6 +13,10 @@
 		box-shadow: 2px 0px 0px 0px #eee;
 
 		.tree{
+			img{
+				width: 100px;
+				height: 60px;
+			}
 			&-item{
 				display: flex;
 				align-items: center;
