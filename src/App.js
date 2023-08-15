@@ -1,11 +1,7 @@
 import "./App.scss"
-import _ from "lodash"
-import { useEffect } from "react"
-import ReactMarkdown from "react-markdown"
 import { HashRouter, Route, Routes } from "react-router-dom"
 import Home from "@/pages/home"
-import CherryMarkdown from "@/pages/cherry-markdown";
-import mdStr from "@/mocks/markdown";
+import Markdown from "@/pages/markdown";
 
 function App() {
 
@@ -14,7 +10,7 @@ function App() {
 			<HashRouter path="/*">
 				<Routes>
 					<Route path="/" element={<Home />} />
-					<Route path="/cherry-markdown" element={<CherryMarkdown />} />
+					<Route path="/cherry-markdown" element={<Markdown />} />
 				</Routes>
 			</HashRouter>
 		</div>

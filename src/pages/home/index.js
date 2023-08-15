@@ -1,7 +1,6 @@
-import ReactMarkdown from "react-markdown"
 import mdStr from "@/mocks/markdown"
 import "./index.scss"
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import {unified} from 'unified'
 import remarkParse from 'remark-parse'
 import {fromMarkdown} from 'mdast-util-from-markdown'
