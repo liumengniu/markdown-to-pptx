@@ -1,7 +1,7 @@
 import ReactMarkdown from "react-markdown"
 import mdStr from "@/mocks/markdown"
 import "./index.scss"
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {unified} from 'unified'
 import remarkParse from 'remark-parse'
 import {fromMarkdown} from 'mdast-util-from-markdown'
@@ -10,6 +10,7 @@ import {toHast} from 'mdast-util-to-hast'
 import {toc} from 'mdast-util-toc'
 import {toString} from 'mdast-util-to-string'
 import _ from "lodash"
+import {DivContentEditable} from "@mroc/react-div-contenteditable";
 
 const MarkdownIt = require('markdown-it');
 /**
@@ -18,13 +19,22 @@ const MarkdownIt = require('markdown-it');
  * @date 2023/8/10
  */
 
+
 function Home() {
 	const [data, setData] = useState([])
 	const [html, setHtml] = useState(null)
 	
+	const inputRef = useRef(null);
+	
+	useEffect(() => {
+		inputRef?.current?.focus();
+	}, [inputRef]);
+	
 	useEffect(()=>{
 		initData();
 	}, [])
+	
+	// const
 	
 	/**
 	 * 初始化数据
@@ -52,7 +62,7 @@ function Home() {
 	 */
 	const handleEditMd = (e, idx) =>{
 		const value = e.target.textContent;
-		let item = _.get(data, `children.${idx}`)
+		let item = _.cloneDeep(_.get(data, `children.${idx}`))
 		_.set(item, `children.${0}.value`, value)
 		let newData = _.cloneDeep(data) || [];
 		newData.children[idx] = item;
@@ -67,10 +77,12 @@ function Home() {
 					_.map(data?.children, (o, idx)=>{
 						if(!_.isNil(o?.depth)) level = o?.depth;
 						return (
-							<div className={`${o?.depth ? 'depth-'+ o?.depth : '' } tree-item`} style={{ paddingLeft: o?.type === "paragraph" ? level *30 + "px" : (o?.depth -1) *30 + "px"}} key={idx}>
+							<div className={`${o?.depth ? 'depth-' + o?.depth : ''} tree-item`}
+							     style={{paddingLeft: o?.type === "paragraph" ? level * 30 + "px" : (o?.depth - 1) * 30 + "px"}}
+							     key={idx}>
 								<div className="tree-item-line"/>
 								<div className="tree-item-point"/>
-								<div className="tree-item-content" onInput={(e)=>handleEditMd(e, idx)}>{_.get(o, `children.0.value`)}</div>
+								<div className="tree-item-content" contentEditable={true} onInput={(e)=>handleEditMd(e, idx)}>{_.get(o, `children.0.value`)}</div>
 							</div>
 						)
 					})
@@ -99,7 +111,7 @@ function Home() {
 				{/*{renderItem()}*/}
 			</div>
 			<div className="md-right">
-				<div dangerouslySetInnerHTML={{ __html: html }}></div>
+				<div dangerouslySetInnerHTML={{ __html: html }} />
 			</div>
 		</div>
 	)
