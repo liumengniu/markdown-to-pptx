@@ -38,13 +38,21 @@
 			&-item{
 				display: flex;
 				align-items: center;
-				box-sizing: border-box;
 				margin-bottom: 5px;
-				&-line{
-					//background-color: #D0CFCD;
-					//width: 2px;
-					//height: 100%;
-					//min-height: 24px;
+				position: relative;
+				&:hover{
+					.tree-item-add {
+						display: block;
+					}
+				}
+				&-add{
+					cursor: pointer;
+					position: absolute;
+					left: 30px;
+					color: #D0CFCD;
+					font-size: 24px;
+					writing-mode: vertical-rl;
+					display: none;
 				}
 				&-point{
 					width: 8px;

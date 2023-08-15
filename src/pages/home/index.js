@@ -75,9 +75,12 @@ function Home() {
 					_.map(data?.children, (o, idx) => {
 						if (!_.isNil(o?.depth)) level = o?.depth;
 						return (
-							<div className={`${o?.depth ? 'depth-' + o?.depth : ''} tree-item`}
+							<div className={` tree-item ${'tree-item-' + o?.depth}`}
 							     style={{paddingLeft: o?.type === "paragraph" ? level * 30 + "px" : (o?.depth - 1) * 30 + "px"}}
 							     key={idx}>
+								{
+									o?.depth !== 1 && <div className="tree-item-add">+</div>
+								}
 								<div className="tree-item-line"/>
 								<div className="tree-item-point"/>
 								<div className="tree-item-content" contentEditable={true} suppressContentEditableWarning={true}
