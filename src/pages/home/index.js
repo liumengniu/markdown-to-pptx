@@ -12,13 +12,12 @@ import {toString} from 'mdast-util-to-string'
 import _ from "lodash"
 
 const MarkdownIt = require('markdown-it');
+
 /**
  * description： 首页
  * @author Kevin
  * @date 2023/8/10
  */
-
-
 function Home() {
 	const [data, setData] = useState([])
 	const [rightData, setRightData] = useState([])
