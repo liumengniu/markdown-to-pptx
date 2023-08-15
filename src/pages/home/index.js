@@ -1,6 +1,6 @@
 import mdStr from "@/mocks/markdown"
 import "./index.scss"
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {unified} from 'unified'
 import remarkParse from 'remark-parse'
 import {fromMarkdown} from 'mdast-util-from-markdown'
@@ -10,6 +10,7 @@ import {toHast} from 'mdast-util-to-hast'
 import {toc} from 'mdast-util-toc'
 import {toString} from 'mdast-util-to-string'
 import _ from "lodash"
+import { useClickAway } from 'ahooks';
 
 const MarkdownIt = require('markdown-it');
 
@@ -22,12 +23,17 @@ function Home() {
 	const [data, setData] = useState([])
 	const [rightData, setRightData] = useState([])
 	const [html, setHtml] = useState(null)
+	const ref = useRef(null)
 	
 	const [optionsIdx, setOptionsIdx] = useState(null)
 	
 	useEffect(() => {
 		initData();
 	}, [])
+	
+	useClickAway(() => {
+		setOptionsIdx(null)
+	}, ref);
 	
 	// const
 	
@@ -93,7 +99,7 @@ function Home() {
 	const renderTree = () => {
 		let level = 1;
 		return (
-			<div className="tree">
+			<div className="tree" ref={ref}>
 				{
 					_.map(data?.children, (o, idx) => {
 						if (!_.isNil(o?.depth)) level = o?.depth;
@@ -101,9 +107,11 @@ function Home() {
 							<div className={` tree-item ${'tree-item-' + o?.depth}`}
 							     style={{marginLeft: o?.type === "paragraph" ? level * 30 + "px" : (o?.depth - 1) * 30 + "px"}}
 							     key={idx}>
-								<div className="tree-item-add">
-									<span onClick={()=>showOptions(idx)}>+</span>
-									<div className={`tree-item-add-options ${idx === optionsIdx ? 'active' : ''}`}>
+								<div className="tree-item-box">
+									<div className="tree-item-add">
+										<span onClick={()=>showOptions(idx)}>+</span>
+									</div>
+									<div className={`tree-item-options ${idx === optionsIdx ? 'active' : ''}`}>
 										<ul>
 											<li onClick={() => addItem(o, idx)}>添加节点</li>
 											<li onClick={() => addChildItem(o, idx)}>添加子节点</li>
@@ -150,7 +158,7 @@ function Home() {
 	}
 	
 	return (
-		<div className="md">
+		<div className="md" >
 			<div className="md-left">
 				<div className="btn" onClick={handleExport}>输出</div>
 				{renderTree()}

@@ -22,7 +22,6 @@
 			background-color: #1677ff;
 			box-shadow: 0 2px 0 rgba(5,145,255,.1);
 			font-size: 14px;
-			//height: 32px;
 			padding: 4px 15px;
 			border-radius: 6px;
 			&:hover{
@@ -39,11 +38,16 @@
 				display: flex;
 				align-items: center;
 				margin-bottom: 5px;
-				position: relative;
+				position: static;
 				&:hover{
 					.tree-item-add {
 						display: block;
 					}
+				}
+				&-box{
+					position: relative;
+					display: flex;
+					align-items: center;
 				}
 				&-add{
 					cursor: pointer;
@@ -53,40 +57,41 @@
 					font-size: 24px;
 					>span{
 						writing-mode: vertical-rl;
+						display: block;
 					}
 					display: none;
-					&-options{
-						width: 100%;
-						position: relative;
-						margin: 0;
-						padding: 4px 0;
-						text-align: left;
-						list-style-type: none;
-						background-color: #fff;
-						background-clip: padding-box;
-						border-radius: 2px;
-						outline: none;
-						box-shadow: 0 2px 8px #00000026;
-						-webkit-transform: translate3d(0,0,0);
-						display: none;
-						&.active{
-							display: block;
-						}
 
-						>ul {
-							>li{
-								clear: both;
-								margin: 0;
-								padding: 5px 12px;
-								color: #000000a6;
-								font-weight: 400;
-								font-size: 14px;
-								line-height: 22px;
-								white-space: nowrap;
-								cursor: pointer;
-								transition: all .3s;
-								list-style: none;
-							}
+				}
+				&-options{
+					display: none;
+					position: absolute;
+					left: -20px;
+					top: 20px;
+					padding: 4px 0;
+					text-align: left;
+					list-style-type: none;
+					background-color: rgba(255, 255, 255, 1) !important;
+					background-clip: padding-box;
+					border-radius: 2px;
+					outline: none;
+					box-shadow: 0 2px 8px #00000026;
+					&.active{
+						display: block;
+					}
+
+					>ul {
+						>li{
+							clear: both;
+							margin: 0;
+							padding: 5px 12px;
+							color: #000000a6;
+							font-weight: 400;
+							font-size: 14px;
+							line-height: 22px;
+							white-space: nowrap;
+							cursor: pointer;
+							transition: all .3s;
+							list-style: none;
 						}
 					}
 				}
@@ -101,7 +106,7 @@
 					min-height: 24px;
 					cursor: text;
 					border: none;
-					outline: none
+					outline: none;
 				}
 			}
 		}
