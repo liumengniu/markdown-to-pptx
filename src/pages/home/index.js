@@ -23,7 +23,9 @@ function Home() {
 	const [rightData, setRightData] = useState([])
 	const [html, setHtml] = useState(null)
 	
-	useEffect(()=>{
+	const [optionsIdx, setOptionsIdx] = useState(null)
+	
+	useEffect(() => {
 		initData();
 	}, [])
 	
@@ -32,12 +34,12 @@ function Home() {
 	/**
 	 * 初始化数据
 	 */
-	const initData = ()=>{
+	const initData = () => {
 		let md = new MarkdownIt();
 		let res = md.render(mdStr)
 		const tree = fromMarkdown(mdStr)
 		renderHtml(tree)
-		const str =  toString(tree)
+		const str = toString(tree)
 		const table = toc(tree)
 		setData(tree)
 		setRightData(tree)
@@ -46,7 +48,7 @@ function Home() {
 	/**
 	 * 根据左侧的编辑 - 渲染最新的html
 	 */
-	const renderHtml = mdast =>{
+	const renderHtml = mdast => {
 		const hast = toHast(mdast)
 		const lastHtml = toHtml(hast)
 		setHtml(lastHtml)
@@ -54,7 +56,7 @@ function Home() {
 	/**
 	 * 编辑左侧md树
 	 */
-	const handleEditMd = (e, idx) =>{
+	const handleEditMd = (e, idx) => {
 		const value = e.target.textContent;
 		let item = _.cloneDeep(_.get(data, `children.${idx}`))
 		_.set(item, `children.${0}.value`, value)
@@ -64,10 +66,31 @@ function Home() {
 		setRightData(newData)
 	}
 	/**
+	 * 显示options
+	 */
+	const showOptions = idx =>{
+		setOptionsIdx(idx)
+	}
+	/**
+	 * 添加节点
+	 */
+	const addItem = (item, idx) => {
+	}
+	/**
+	 * 添加子节点
+	 */
+	const addChildItem = (item, idx) => {
+	}
+	/**
+	 * 删除节点
+	 */
+	const removeItem = (item, idx) => {
+	}
+	/**
 	 * 通过直接遍历渲染树节点
 	 * @returns {JSX.Element}
 	 */
-	const renderTree = ()=>{
+	const renderTree = () => {
 		let level = 1;
 		return (
 			<div className="tree">
@@ -76,11 +99,20 @@ function Home() {
 						if (!_.isNil(o?.depth)) level = o?.depth;
 						return (
 							<div className={` tree-item ${'tree-item-' + o?.depth}`}
-							     style={{paddingLeft: o?.type === "paragraph" ? level * 30 + "px" : (o?.depth - 1) * 30 + "px"}}
+							     style={{marginLeft: o?.type === "paragraph" ? level * 30 + "px" : (o?.depth - 1) * 30 + "px"}}
 							     key={idx}>
-								{
-									o?.depth !== 1 && <div className="tree-item-add">+</div>
-								}
+								<div className="tree-item-add">
+									<span onClick={()=>showOptions(idx)}>+</span>
+									<div className={`tree-item-add-options ${idx === optionsIdx ? 'active' : ''}`}>
+										<ul>
+											<li onClick={() => addItem(o, idx)}>添加节点</li>
+											<li onClick={() => addChildItem(o, idx)}>添加子节点</li>
+											<li onClick={() => removeItem(o, idx)}>删除节点</li>
+											<li>添加图片</li>
+											<li>子节点添加图片</li>
+										</ul>
+									</div>
+								</div>
 								<div className="tree-item-line"/>
 								<div className="tree-item-point"/>
 								<div className="tree-item-content" contentEditable={true} suppressContentEditableWarning={true}
@@ -98,12 +130,12 @@ function Home() {
 	/**
 	 * 递归渲染md树节点
 	 */
-	const renderItem = ()=>{
-		return _.map(data?.map, (o, idx)=>{
+	const renderItem = () => {
+		return _.map(data?.map, (o, idx) => {
 			return (
 				<div className="tree-item" key={idx}>
 					<div className="tree-item-point"/>
-					<div className="tree-item-content">{_.get(o,`children.0.children.0.children.0.value`)}</div>
+					<div className="tree-item-content">{_.get(o, `children.0.children.0.children.0.value`)}</div>
 				</div>
 			)
 		})
@@ -112,7 +144,7 @@ function Home() {
 	/**
 	 * 输出新的markdown的 str
 	 */
-	const handleExport = () =>{
+	const handleExport = () => {
 		let newStr = toMarkdown(rightData)
 		alert(`输出markdown： \n${newStr}`)
 	}
@@ -125,7 +157,7 @@ function Home() {
 				{/*{renderItem()}*/}
 			</div>
 			<div className="md-right">
-				<div dangerouslySetInnerHTML={{ __html: html }} />
+				<div dangerouslySetInnerHTML={{__html: html}}/>
 			</div>
 		</div>
 	)

@@ -48,11 +48,47 @@
 				&-add{
 					cursor: pointer;
 					position: absolute;
-					left: 30px;
+					left: -30px;
 					color: #D0CFCD;
 					font-size: 24px;
-					writing-mode: vertical-rl;
+					>span{
+						writing-mode: vertical-rl;
+					}
 					display: none;
+					&-options{
+						width: 100%;
+						position: relative;
+						margin: 0;
+						padding: 4px 0;
+						text-align: left;
+						list-style-type: none;
+						background-color: #fff;
+						background-clip: padding-box;
+						border-radius: 2px;
+						outline: none;
+						box-shadow: 0 2px 8px #00000026;
+						-webkit-transform: translate3d(0,0,0);
+						display: none;
+						&.active{
+							display: block;
+						}
+
+						>ul {
+							>li{
+								clear: both;
+								margin: 0;
+								padding: 5px 12px;
+								color: #000000a6;
+								font-weight: 400;
+								font-size: 14px;
+								line-height: 22px;
+								white-space: nowrap;
+								cursor: pointer;
+								transition: all .3s;
+								list-style: none;
+							}
+						}
+					}
 				}
 				&-point{
 					width: 8px;
