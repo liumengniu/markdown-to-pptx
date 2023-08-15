@@ -23,12 +23,6 @@ function Home() {
 	const [data, setData] = useState([])
 	const [html, setHtml] = useState(null)
 	
-	const inputRef = useRef(null);
-	
-	useEffect(() => {
-		inputRef?.current?.focus();
-	}, [inputRef]);
-	
 	useEffect(()=>{
 		initData();
 	}, [])
@@ -67,7 +61,10 @@ function Home() {
 		newData.children[idx] = item;
 		renderHtml(newData)
 	}
-	
+	/**
+	 * 通过直接遍历渲染树节点
+	 * @returns {JSX.Element}
+	 */
 	const renderTree = ()=>{
 		let level = 1;
 		return (
