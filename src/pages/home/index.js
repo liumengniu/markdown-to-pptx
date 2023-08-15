@@ -10,7 +10,6 @@ import {toHast} from 'mdast-util-to-hast'
 import {toc} from 'mdast-util-toc'
 import {toString} from 'mdast-util-to-string'
 import _ from "lodash"
-import {DivContentEditable} from "@mroc/react-div-contenteditable";
 
 const MarkdownIt = require('markdown-it');
 /**
@@ -74,15 +73,16 @@ function Home() {
 		return (
 			<div className="tree">
 				{
-					_.map(data?.children, (o, idx)=>{
-						if(!_.isNil(o?.depth)) level = o?.depth;
+					_.map(data?.children, (o, idx) => {
+						if (!_.isNil(o?.depth)) level = o?.depth;
 						return (
 							<div className={`${o?.depth ? 'depth-' + o?.depth : ''} tree-item`}
 							     style={{paddingLeft: o?.type === "paragraph" ? level * 30 + "px" : (o?.depth - 1) * 30 + "px"}}
 							     key={idx}>
 								<div className="tree-item-line"/>
 								<div className="tree-item-point"/>
-								<div className="tree-item-content" contentEditable={true} onInput={(e)=>handleEditMd(e, idx)}>{_.get(o, `children.0.value`)}</div>
+								<div className="tree-item-content" contentEditable={true}
+								     onInput={(e) => handleEditMd(e, idx)}>{_.get(o, `children.0.value`)}</div>
 							</div>
 						)
 					})
