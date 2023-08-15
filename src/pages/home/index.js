@@ -81,6 +81,13 @@ function Home() {
 	 * 添加节点
 	 */
 	const addItem = (item, idx) => {
+		let newItem = _.cloneDeep(item);
+		_.set(newItem, `children.${0}.value`, "- ")
+		let newData = _.cloneDeep(data)
+		console.log(item, idx, '===================================================', newData)
+		newData?.children?.splice(idx+1, 0,newItem)
+		setData(newData)
+		setOptionsIdx(null)
 	}
 	/**
 	 * 添加子节点
