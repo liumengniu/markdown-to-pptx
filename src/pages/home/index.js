@@ -84,7 +84,6 @@ function Home() {
 		let newItem = _.cloneDeep(item);
 		_.set(newItem, `children.${0}.value`, "- ")
 		let newData = _.cloneDeep(data)
-		console.log(item, idx, '===================================================', newData)
 		newData?.children?.splice(idx+1, 0,newItem)
 		setData(newData)
 		setOptionsIdx(null)
@@ -93,11 +92,22 @@ function Home() {
 	 * 添加子节点
 	 */
 	const addChildItem = (item, idx) => {
+		let newItem = _.cloneDeep(item);
+		_.set(newItem, `children.${0}.value`, "- ")
+		_.set(newItem, `depth`, _.get(newItem, `depth`) + 1)
+		let newData = _.cloneDeep(data)
+		newData?.children?.splice(idx+1, 0,newItem)
+		setData(newData)
+		setOptionsIdx(null)
 	}
 	/**
 	 * 删除节点
 	 */
 	const removeItem = (item, idx) => {
+		let newData = _.cloneDeep(data)
+		newData.children = _.filter(newData?.children, (o,i)=> i !== idx)
+		setData(newData)
+		setOptionsIdx(null)
 	}
 	/**
 	 * 通过直接遍历渲染树节点
