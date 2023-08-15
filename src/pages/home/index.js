@@ -5,6 +5,7 @@ import {useEffect, useRef, useState} from "react";
 import {unified} from 'unified'
 import remarkParse from 'remark-parse'
 import {fromMarkdown} from 'mdast-util-from-markdown'
+import {toMarkdown} from "mdast-util-to-markdown"
 import {toHtml} from 'hast-util-to-html'
 import {toHast} from 'mdast-util-to-hast'
 import {toc} from 'mdast-util-toc'
@@ -21,6 +22,7 @@ const MarkdownIt = require('markdown-it');
 
 function Home() {
 	const [data, setData] = useState([])
+	const [rightData, setRightData] = useState([])
 	const [html, setHtml] = useState(null)
 	
 	useEffect(()=>{
@@ -40,7 +42,8 @@ function Home() {
 		const str =  toString(tree)
 		const table = toc(tree)
 		setData(tree)
-		console.log(tree,'============================================',  str)
+		setRightData(tree)
+		// console.log(tree,'============================================',  str)
 	}
 	/**
 	 * 根据左侧的编辑 - 渲染最新的html
@@ -60,6 +63,7 @@ function Home() {
 		let newData = _.cloneDeep(data) || [];
 		newData.children[idx] = item;
 		renderHtml(newData)
+		setRightData(newData)
 	}
 	/**
 	 * 通过直接遍历渲染树节点
@@ -104,9 +108,18 @@ function Home() {
 		})
 	}
 	
+	/**
+	 * 输出新的markdown的 str
+	 */
+	const handleExport = () =>{
+		let newStr = toMarkdown(rightData)
+		alert(`输出markdown： \n${newStr}`)
+	}
+	
 	return (
 		<div className="md">
 			<div className="md-left">
+				<div className="btn" onClick={handleExport}>输出</div>
 				{renderTree()}
 				{/*{renderItem()}*/}
 			</div>
