@@ -104,8 +104,8 @@ function Home() {
 			slide.addText(_.map(item?.children || [], o => ({text :o.text + "\n"})),
 				{ x: "10%", y: "24%", w: 8.5, h: 2.0, margin: 0.1 }
 			);
+			_.get(_.last(item?.children), 'images.0') && slide.addImage({ path: _.get(_.last(item?.children), 'images.0') });
 		}
-
 	}
 	/**
 	 * 绘制单张幻灯片

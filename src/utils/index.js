@@ -42,8 +42,10 @@ const utils = {
 				const altText = matchImage[1];
 				const imageUrl = matchImage[2];
 				const newNode = { type: 'image', altText, imageUrl };
-
 				currentNode.children.push(newNode);
+				//新增图片兼容，将子目录下的图片往上提升，放在父一级更好处理
+				if (!currentNode.images || JSON.stringify(currentNode.images) === "[]") currentNode.images = [];
+				currentNode.images = [imageUrl]
 			} else if (matchLink) {
 				const linkText = matchLink[1];
 				const linkUrl = matchLink[2];
