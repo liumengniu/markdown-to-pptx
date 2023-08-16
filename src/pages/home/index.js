@@ -27,10 +27,19 @@ function Home() {
 	
 	const [optionsIdx, setOptionsIdx] = useState(null)
 	
+	/**
+	 * useEffect
+	 */
 	useEffect(() => {
 		initData();
 	}, [])
+	useEffect(() => {
+		initPptx();
+	}, [])
 	
+	/**
+	 * useClickAway 点击
+	 */
 	useClickAway(() => {
 		setOptionsIdx(null)
 	}, ref);
@@ -51,6 +60,10 @@ function Home() {
 		setRightData(tree)
 		// console.log(tree,'============================================',  str)
 	}
+	/**
+	 * 渲染 html 版 pptx
+	 */
+	const initPptx = () =>{}
 	/**
 	 * 根据左侧的编辑 - 渲染最新的html
 	 */
