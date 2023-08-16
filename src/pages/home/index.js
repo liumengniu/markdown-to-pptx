@@ -56,7 +56,7 @@ function Home() {
 		renderHtml(tree)
 		setData(tree)
 		setRightData(tree)
-		// console.log(tree,'============================================',  str)
+		console.log(tree,'============================================')
 	}
 	/**
 	 * 渲染 html 版 pptx
@@ -76,7 +76,8 @@ function Home() {
 	 */
 	const renderCover = () => {
 		let slide = pres.addSlide();
-		slide.addText("Hello", { x: 0.5, y: 0.7, w: 3, color: "0000FF", fontSize: 64 });
+		slide.background ={ path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
+		slide.addText(_.get(data, 'children.0.children.0.value'), {x: 0, y: '40%', w: "100%", color: "#ffffff", fontSize: 64, align: "center"});
 	}
 	
 	/**
