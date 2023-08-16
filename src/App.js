@@ -1,7 +1,7 @@
 import "./App.scss"
 import { HashRouter, Route, Routes } from "react-router-dom"
 import Home from "@/pages/home"
-import Markdown from "@/pages/markdown";
+import Pptx from "@/pages/pptx";
 
 function App() {
 
@@ -10,7 +10,7 @@ function App() {
 			<HashRouter path="/*">
 				<Routes>
 					<Route path="/" element={<Home />} />
-					<Route path="/cherry-markdown" element={<Markdown />} />
+					<Route path="/pptx" element={<Pptx />} />
 				</Routes>
 			</HashRouter>
 		</div>
