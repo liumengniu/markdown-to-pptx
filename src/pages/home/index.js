@@ -118,9 +118,21 @@ function Home() {
 	 * 导出pptx至本地
 	 */
 	const exportPptx = ()=>{
+		console.log("绘制封面")
 		renderCover()
+		console.log("绘制全部slides")
 		renderSlides()
-		pres.writeFile({ fileName: "AIGC-PPTX.pptx" });
+		// pres.writeFile({ fileName: "AIGC-PPTX.pptx" });
+		console.log("执行导出pptx")
+		pres.write("base64")
+			.then((data) => {
+				console.log("write as base64: Here are 0-100 chars of `data`:\n");
+				console.log(data.substring(0, 100));
+				console.log(data)
+			})
+			.catch((err) => {
+				console.error(err);
+			});
 	}
 	/**
 	 * 根据左侧的编辑 - 渲染最新的html
@@ -224,20 +236,6 @@ function Home() {
 		)
 	}
 	/**
-	 * 递归渲染md树节点
-	 */
-	const renderItem = () => {
-		return _.map(data?.map, (o, idx) => {
-			return (
-				<div className="tree-item" key={idx}>
-					<div className="tree-item-point"/>
-					<div className="tree-item-content">{_.get(o, `children.0.children.0.children.0.value`)}</div>
-				</div>
-			)
-		})
-	}
-
-	/**
 	 * 输出新的markdown的 str
 	 */
 	const handleExport = () => {
@@ -251,7 +249,6 @@ function Home() {
 				<div className="btn" onClick={handleExport}>输出markdown</div>
 				<div className="btn two" onClick={exportPptx}>输出pptx</div>
 				{renderTree()}
-				{/*{renderItem()}*/}
 			</div>
 			<div className="md-right">
 				<div dangerouslySetInnerHTML={{__html: html}}/>
