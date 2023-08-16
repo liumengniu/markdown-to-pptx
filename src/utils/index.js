@@ -20,11 +20,14 @@ const utils = {
 		let currentNode = { children: tree };
 
 		for (const line of lines) {
-			const match = line.match(/^(#+)\s+(.*)/);
-			if (match) {
-				const level = match[1].length; // Heading level based on the number of '#' symbols
-				const text = match[2];
-				const newNode = { level, text, children: [] };
+			const matchHeading = line.match(/^(#+)\s+(.*)/);
+			const matchImage = line.match(/^\!\[([^\]]+)\]\(([^\)]+)\)/);
+			const matchLink = line.match(/\[([^\]]+)\]\(([^\)]+)\)/);
+
+			if (matchHeading) {
+				const level = matchHeading[1].length;
+				const text = matchHeading[2];
+				const newNode = { type: 'heading', level, text, children: [] };
 
 				if (level <= currentNode.level) {
 					while (currentNode.level >= level) {
@@ -35,6 +38,18 @@ const utils = {
 				newNode.parent = currentNode;
 				currentNode.children.push(newNode);
 				currentNode = newNode;
+			} else if (matchImage) {
+				const altText = matchImage[1];
+				const imageUrl = matchImage[2];
+				const newNode = { type: 'image', altText, imageUrl };
+
+				currentNode.children.push(newNode);
+			} else if (matchLink) {
+				const linkText = matchLink[1];
+				const linkUrl = matchLink[2];
+				const newNode = { type: 'link', linkText, linkUrl };
+
+				currentNode.children.push(newNode);
 			} else {
 				if (line.trim() !== "") {
 					if (!currentNode.text) {

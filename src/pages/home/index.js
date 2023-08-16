@@ -74,7 +74,7 @@ function Home() {
 	}
 
 	/**
-	 * 输出pptx封面
+	 * 绘制pptx封面
 	 */
 	const renderCover = () => {
 		let slide = pres.addSlide();
@@ -82,33 +82,28 @@ function Home() {
 		slide.addText(_.get(data, 'children.0.children.0.value'), {x: 0, y: '40%', w: "100%", color: "#ffffff", fontSize: 64, align: "center"});
 	}
 	/**
-	 * 渲染全部幻灯片
+	 * 绘制目录界面
+	 */
+	const renderDirectory = () =>{
+
+	}
+	/**
+	 * 绘制全部幻灯片
 	 */
 	const renderSlides = () => {
-		let children = data?.children || [];
-		let slidesData = _.filter(children, (o, i) => i !== 0)
-		//第二层级的数据集
-		let secondData = _.filter(children, (o, i) => o.depth === 2)
-		//第三层级的数据集
-		let thirdData = _.filter(children, (o, i) => o.depth === 3)
-		let slide = null;
-		for (let i = 0; i < children.length; i++) {
-			let item = children[i];
-			if (item?.depth === 2) {
-				slide = pres.addSlide();
-				slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
-			}
+		const newMdStr = toMarkdown(rightData);
+		const tree = _.get(utils.parseMarkdownToTree(newMdStr),'0.children');
+		for (let i = 0; i < tree.length; i++) {
+			let item = tree[i];
+			let slide = pres.addSlide();
+			slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
 			console.log(item, 'itemitemitemitemitemitemitemitem', slide)
-			slide && slide.addText(_.get(item, 'children.0.value'), {
-				x: "10%",
-				y: '10%',
-				w: "80%",
-				h: "80%",
-				color: "#333",
-				fontSize: 30,
-				valign: "middle"
+			slide && slide.addText(_.get(item, 'text'), {
+				x: "10%", y: '10%', w: "80%", h: "80%", color: "#333", fontSize: 30, valign: "top"
 			});
-			continue;
+			slide.addText(_.map(item?.children || [], o => ({text :o.text + "\n"})),
+				{ x: "10%", y: "24%", w: 8.5, h: 2.0, margin: 0.1 }
+			);
 		}
 
 	}
@@ -118,7 +113,6 @@ function Home() {
 	const renderSlide = item =>{
 		let slide = pres.addSlide();
 		slide.background ={ path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
-
 	}
 	/**
 	 * 导出pptx至本地
