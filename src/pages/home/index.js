@@ -79,12 +79,51 @@ function Home() {
 		slide.background ={ path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
 		slide.addText(_.get(data, 'children.0.children.0.value'), {x: 0, y: '40%', w: "100%", color: "#ffffff", fontSize: 64, align: "center"});
 	}
-	
+	/**
+	 * 渲染全部幻灯片
+	 */
+	const renderSlides = () => {
+		let children = data?.children || [];
+		let slidesData = _.filter(children, (o, i) => i !== 0)
+		//第二层级的数据集
+		let secondData = _.filter(children, (o, i) => o.depth === 2)
+		//第三层级的数据集
+		let thirdData = _.filter(children, (o, i) => o.depth === 3)
+		let slide = null;
+		for (let i = 0; i < children.length; i++) {
+			let item = children[i];
+			if (item?.depth === 2) {
+				slide = pres.addSlide();
+				slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
+			}
+			console.log(item, 'itemitemitemitemitemitemitemitem', slide)
+			slide && slide.addText(_.get(item, 'children.0.value'), {
+				x: "10%",
+				y: '10%',
+				w: "80%",
+				h: "80%",
+				color: "#333",
+				fontSize: 30,
+				valign: "middle"
+			});
+			continue;
+		}
+		
+	}
+	/**
+	 * 绘制单张幻灯片
+	 */
+	const renderSlide = item =>{
+		let slide = pres.addSlide();
+		slide.background ={ path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
+		
+	}
 	/**
 	 * 导出pptx至本地
 	 */
 	const exportPptx = ()=>{
 		renderCover()
+		renderSlides()
 		pres.writeFile({ fileName: "AIGC-PPTX.pptx" });
 	}
 	/**
