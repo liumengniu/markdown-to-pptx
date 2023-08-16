@@ -10,6 +10,7 @@ import {toString} from 'mdast-util-to-string'
 import _ from "lodash"
 import { useClickAway } from 'ahooks';
 import pptxgen from "pptxgenjs";
+import utils from "../../utils";
 
 let pres;
 
@@ -23,9 +24,9 @@ function Home() {
 	const [rightData, setRightData] = useState([])
 	const [html, setHtml] = useState(null)
 	const ref = useRef(null)
-	
+
 	const [optionsIdx, setOptionsIdx] = useState(null)
-	
+
 	/**
 	 * useEffect
 	 */
@@ -38,16 +39,16 @@ function Home() {
 	useEffect(()=>{
 		initPres();
 	},[])
-	
+
 	/**
 	 * useClickAway 点击
 	 */
 	useClickAway(() => {
 		setOptionsIdx(null)
 	}, ref);
-	
+
 	// const
-	
+
 	/**
 	 * 初始化数据
 	 */
@@ -56,13 +57,14 @@ function Home() {
 		renderHtml(tree)
 		setData(tree)
 		setRightData(tree)
-		console.log(tree,'============================================')
+		const treeData = utils.parseMarkdownToTree(mdStr)
+		console.log(tree,'============================================', treeData)
 	}
 	/**
 	 * 渲染 html 版 pptx
 	 */
 	const initPptx = () =>{}
-	
+
 	/**
 	 * 实例化pres
 	 */
@@ -70,7 +72,7 @@ function Home() {
 		pres = new pptxgen();
 		return pres
 	}
-	
+
 	/**
 	 * 输出pptx封面
 	 */
@@ -108,7 +110,7 @@ function Home() {
 			});
 			continue;
 		}
-		
+
 	}
 	/**
 	 * 绘制单张幻灯片
@@ -116,7 +118,7 @@ function Home() {
 	const renderSlide = item =>{
 		let slide = pres.addSlide();
 		slide.background ={ path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
-		
+
 	}
 	/**
 	 * 导出pptx至本地
@@ -240,7 +242,7 @@ function Home() {
 			)
 		})
 	}
-	
+
 	/**
 	 * 输出新的markdown的 str
 	 */
@@ -248,7 +250,7 @@ function Home() {
 		let newStr = toMarkdown(rightData)
 		alert(`输出markdown： \n${newStr}`)
 	}
-	
+
 	return (
 		<div className="md" >
 			<div className="md-left">
