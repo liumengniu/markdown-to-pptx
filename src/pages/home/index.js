@@ -1,8 +1,6 @@
 import mdStr from "@/mocks/markdown"
 import "./index.scss"
 import {useEffect, useRef, useState} from "react";
-import {unified} from 'unified'
-import remarkParse from 'remark-parse'
 import {fromMarkdown} from 'mdast-util-from-markdown'
 import {toMarkdown} from "mdast-util-to-markdown"
 import {toHtml} from 'hast-util-to-html'
@@ -11,8 +9,9 @@ import {toc} from 'mdast-util-toc'
 import {toString} from 'mdast-util-to-string'
 import _ from "lodash"
 import { useClickAway } from 'ahooks';
+import pptxgen from "pptxgenjs";
 
-const MarkdownIt = require('markdown-it');
+let pres;
 
 /**
  * description： 首页
@@ -36,6 +35,9 @@ function Home() {
 	useEffect(() => {
 		initPptx();
 	}, [])
+	useEffect(()=>{
+		initPres();
+	},[])
 	
 	/**
 	 * useClickAway 点击
@@ -50,12 +52,8 @@ function Home() {
 	 * 初始化数据
 	 */
 	const initData = () => {
-		let md = new MarkdownIt();
-		let res = md.render(mdStr)
 		const tree = fromMarkdown(mdStr)
 		renderHtml(tree)
-		const str = toString(tree)
-		const table = toc(tree)
 		setData(tree)
 		setRightData(tree)
 		// console.log(tree,'============================================',  str)
@@ -64,6 +62,30 @@ function Home() {
 	 * 渲染 html 版 pptx
 	 */
 	const initPptx = () =>{}
+	
+	/**
+	 * 实例化pres
+	 */
+	const initPres = () => {
+		pres = new pptxgen();
+		return pres
+	}
+	
+	/**
+	 * 输出pptx封面
+	 */
+	const renderCover = () => {
+		let slide = pres.addSlide();
+		slide.addText("Hello", { x: 0.5, y: 0.7, w: 3, color: "0000FF", fontSize: 64 });
+	}
+	
+	/**
+	 * 导出pptx至本地
+	 */
+	const exportPptx = ()=>{
+		renderCover()
+		pres.writeFile({ fileName: "AIGC-PPTX.pptx" });
+	}
 	/**
 	 * 根据左侧的编辑 - 渲染最新的html
 	 */
@@ -190,7 +212,8 @@ function Home() {
 	return (
 		<div className="md" >
 			<div className="md-left">
-				<div className="btn" onClick={handleExport}>输出</div>
+				<div className="btn" onClick={handleExport}>输出markdown</div>
+				<div className="btn two" onClick={exportPptx}>输出pptx</div>
 				{renderTree()}
 				{/*{renderItem()}*/}
 			</div>
