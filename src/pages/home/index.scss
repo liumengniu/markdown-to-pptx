@@ -3,8 +3,6 @@
 	background-color: #f6f8fa;
 	min-height: 100vh;
 	overflow-y: hidden;
-	padding: 20px;
-	box-sizing: border-box;
 
 	&-left{
 		width: 70%;
@@ -14,7 +12,9 @@
 		box-shadow: 2px 0px 0px 0px #eee;
 		position: relative;
 		max-height: 100vh;
-		overflow-y: scroll;
+		padding: 20px;
+		box-sizing: border-box;
+		overflow-y: auto;
 
 		.btn{
 			position: absolute;
@@ -119,7 +119,7 @@
 	}
 	&-right{
 		width: 30%;
-		padding-left: 20px;
+		padding: 20px;
 		box-sizing: border-box;
 		overflow-x: hidden;
 	}

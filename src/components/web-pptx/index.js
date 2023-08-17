@@ -17,17 +17,29 @@ import utils from "@utils";
 function WebPptx(props) {
 	const {markdownStr} = props
 	const mdTree = markdownStr ? utils.parseMarkdownToTree(markdownStr) : []
+	console.log(mdTree, '===========================mdTree========================')
 	
 	useEffect(() => {
 	
 	}, [])
 	
+	const renderCover = () =>{
+		return (<div style={{color:"#ffffff", fontSize: 24, fontWeight: 'bold'}}>
+			{_.get(mdTree, `0.text`)}
+		</div>)
+	}
+	
+	/**
+	 * 渲染slider， API尽量和 pptxgenjs 贴近，保持渲染版和导出版差异最小
+	 */
+	const renderSlider = () =>{
+	
+	}
+	
 	return (
 		<div className="web-pptx">
 			<Swiper
 				className="mySwiper"
-				// spaceBetween={50}
-				// slidesPerView={3}
 				navigation={true}
 				pagination={{
 					type: 'fraction',
@@ -36,7 +48,9 @@ function WebPptx(props) {
 				onSlideChange={() => console.log('slide change')}
 				onSwiper={(swiper) => console.log(swiper)}
 			>
-				<SwiperSlide>Slide 1</SwiperSlide>
+				<SwiperSlide>
+					{renderCover()}
+				</SwiperSlide>
 				<SwiperSlide>Slide 2</SwiperSlide>
 				<SwiperSlide>Slide 3</SwiperSlide>
 				<SwiperSlide>Slide 4</SwiperSlide>
