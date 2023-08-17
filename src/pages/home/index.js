@@ -152,6 +152,10 @@ function Home() {
 	 */
 	const handleEditMd = (e, idx) => {
 		const value = e.target.textContent;
+		if(value === ""){
+			removeItem(e, idx)
+			return
+		}
 		let item = _.cloneDeep(_.get(data, `children.${idx}`))
 		_.set(item, `children.${0}.value`, value)
 		let newData = _.cloneDeep(data) || [];
