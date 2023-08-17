@@ -2,16 +2,19 @@
 	display: flex;
 	background-color: #f6f8fa;
 	min-height: 100vh;
+	overflow-y: hidden;
 	padding: 20px;
 	box-sizing: border-box;
 
 	&-left{
-		width: 50%;
+		width: 70%;
 		white-space: pre-wrap;
 		word-wrap: break-word;
 		border-right: 1px solid #f6f8fa;
 		box-shadow: 2px 0px 0px 0px #eee;
 		position: relative;
+		max-height: 100vh;
+		overflow-y: scroll;
 
 		.btn{
 			position: absolute;
@@ -34,8 +37,8 @@
 
 		.tree{
 			img{
-				width: 100px;
-				height: 60px;
+				width: 320px;
+				height: 180px;
 			}
 			&-item{
 				display: flex;
@@ -115,7 +118,7 @@
 		}
 	}
 	&-right{
-		width: 50%;
+		width: 30%;
 		padding-left: 20px;
 		box-sizing: border-box;
 		overflow-x: hidden;

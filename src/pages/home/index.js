@@ -11,6 +11,7 @@ import _ from "lodash"
 import { useClickAway } from 'ahooks';
 import pptxgen from "pptxgenjs";
 import utils from "../../utils";
+import WebPptx from "@comp/web-pptx";
 
 let pres;
 
@@ -61,7 +62,7 @@ function Home() {
 		console.log(tree,'============================================', treeData)
 	}
 	/**
-	 * 渲染 html 版 pptx
+	 * 渲染 html 版 web-pptx
 	 */
 	const initPptx = () =>{}
 
@@ -127,7 +128,7 @@ function Home() {
 		renderCover()
 		console.log("绘制全部slides")
 		renderSlides()
-		pres.writeFile({ fileName: "AIGC-PPTX.pptx" });
+		pres.writeFile({ fileName: "AIGC-PPTX.web-pptx" });
 		console.log("执行导出pptx")
 		// pres.write("base64")
 		// 	.then((data) => {
@@ -251,7 +252,9 @@ function Home() {
 		let newStr = toMarkdown(rightData)
 		alert(`输出markdown： \n${newStr}`)
 	}
-
+	
+	const markdownStr = _.isEmpty(rightData) ? null : toMarkdown(rightData);
+	
 	return (
 		<div className="md" >
 			<div className="md-left">
@@ -260,7 +263,8 @@ function Home() {
 				{renderTree()}
 			</div>
 			<div className="md-right">
-				<div dangerouslySetInnerHTML={{__html: html}}/>
+				{/*<div dangerouslySetInnerHTML={{__html: html}}/>*/}
+				<WebPptx markdownStr={markdownStr}/>
 			</div>
 		</div>
 	)
