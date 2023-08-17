@@ -121,6 +121,9 @@
 		width: 30%;
 		padding: 20px;
 		box-sizing: border-box;
+		word-wrap: break-word;
+		max-height: 100vh;
+		overflow-y: auto;
 	}
 	&-right{
 		width: 30%;

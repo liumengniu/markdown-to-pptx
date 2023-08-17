@@ -268,7 +268,9 @@ function Home() {
 				{renderTree()}
 			</div>
 			<div className="md-middle">
-				{markdownStr}
+				<pre>
+					{markdownStr}
+				</pre>
 			</div>
 			<div className="md-right">
 				{/*<div dangerouslySetInnerHTML={{__html: html}}/>*/}
