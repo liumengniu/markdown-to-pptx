@@ -1,5 +1,8 @@
-# 依赖库
+# todolist
 
-remark - 所有和markdown相关的操作（包括解析，转文件，转各种格式，渲染html等）
+1、在线预览pptx
+2、多套pptx样式模板切换
+3、编译成绿色下载可执行软件-分发
 
-markdown-it - 将markdown转换成html格式
+
+
