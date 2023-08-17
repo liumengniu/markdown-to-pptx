@@ -97,22 +97,27 @@ function Home() {
 			let item = tree[i];
 			let slide = pres.addSlide();
 			slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
-			console.log(item, 'itemitemitemitemitemitemitemitem', slide)
 			slide && slide.addText(_.get(item, 'text'), {
 				x: "10%", y: '10%', w: "80%", h: "80%", color: "#333", fontSize: 30, valign: "top"
 			});
 			slide.addText(_.map(item?.children || [], o => ({text :o.text + "\n"})),
 				{ x: "10%", y: "24%", w: 8.5, h: 2.0, margin: 0.1 }
 			);
-			_.get(_.last(item?.children), 'images.0') && slide.addImage({ path: _.get(_.last(item?.children), 'images.0') });
+			_.get(_.last(item?.children), 'images.0') && slide.addImage({
+				path: _.get(_.last(item?.children), 'images.0'),
+				x: "50%",
+				w: "50%",
+				h: "100%",
+				type: "cover"
+			});
 		}
 	}
 	/**
 	 * 绘制单张幻灯片
 	 */
-	const renderSlide = item =>{
+	const renderSlide = item => {
 		let slide = pres.addSlide();
-		slide.background ={ path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
+		slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
 	}
 	/**
 	 * 导出pptx至本地
@@ -122,17 +127,17 @@ function Home() {
 		renderCover()
 		console.log("绘制全部slides")
 		renderSlides()
-		// pres.writeFile({ fileName: "AIGC-PPTX.pptx" });
+		pres.writeFile({ fileName: "AIGC-PPTX.pptx" });
 		console.log("执行导出pptx")
-		pres.write("base64")
-			.then((data) => {
-				console.log("write as base64: Here are 0-100 chars of `data`:\n");
-				console.log(data.substring(0, 100));
-				console.log(data)
-			})
-			.catch((err) => {
-				console.error(err);
-			});
+		// pres.write("base64")
+		// 	.then((data) => {
+		// 		console.log("write as base64: Here are 0-100 chars of `data`:\n");
+		// 		console.log(data.substring(0, 100));
+		// 		console.log(data)
+		// 	})
+		// 	.catch((err) => {
+		// 		console.error(err);
+		// 	});
 	}
 	/**
 	 * 根据左侧的编辑 - 渲染最新的html
