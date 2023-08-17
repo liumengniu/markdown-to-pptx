@@ -253,14 +253,22 @@ function Home() {
 		alert(`输出markdown： \n${newStr}`)
 	}
 	
+	/**
+	 * 最终的markdown的str
+	 * @type {null|string}
+	 */
 	const markdownStr = _.isEmpty(rightData) ? null : toMarkdown(rightData);
 	
 	return (
 		<div className="md" >
+			
 			<div className="md-left">
 				<div className="btn" onClick={handleExport}>输出新markdown</div>
 				<div className="btn two" onClick={exportPptx}>输出pptx</div>
 				{renderTree()}
+			</div>
+			<div className="md-middle">
+				{markdownStr}
 			</div>
 			<div className="md-right">
 				{/*<div dangerouslySetInnerHTML={{__html: html}}/>*/}

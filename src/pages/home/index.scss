@@ -5,7 +5,7 @@
 	overflow-y: hidden;
 
 	&-left{
-		width: 70%;
+		width: 40%;
 		white-space: pre-wrap;
 		word-wrap: break-word;
 		border-right: 1px solid #f6f8fa;
@@ -116,6 +116,11 @@
 				}
 			}
 		}
+	}
+	&-middle{
+		width: 30%;
+		padding: 20px;
+		box-sizing: border-box;
 	}
 	&-right{
 		width: 30%;
