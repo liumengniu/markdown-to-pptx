@@ -5,8 +5,6 @@ import {fromMarkdown} from 'mdast-util-from-markdown'
 import {toMarkdown} from "mdast-util-to-markdown"
 import {toHtml} from 'hast-util-to-html'
 import {toHast} from 'mdast-util-to-hast'
-import {toc} from 'mdast-util-toc'
-import {toString} from 'mdast-util-to-string'
 import _ from "lodash"
 import { useClickAway } from 'ahooks';
 import pptxgen from "pptxgenjs";
