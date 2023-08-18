@@ -18,7 +18,7 @@ import _ from "lodash";
 function WebPptx(props) {
 	const {markdownStr} = props
 	const mdTree = markdownStr ? utils.parseMarkdownToTree(markdownStr) : []
-	console.log(mdTree, '===========================mdTree========================')
+	// console.log(mdTree, '===========================mdTree========================')
 	
 	useEffect(() => {
 	

@@ -211,7 +211,8 @@ function Home() {
 				{
 					_.map(data?.children, (o, idx) => {
 						if (!_.isNil(o?.depth)) level = o?.depth;
-						return (
+						let type = _.get(o, `children.0.type`);
+						return (type === "text" || type === "image") && (
 							<div className={` tree-item ${'tree-item-' + o?.depth}`}
 							     style={{marginLeft: o?.type === "paragraph" ? level * 30 + "px" : (o?.depth - 1) * 30 + "px"}}
 							     key={idx}>
@@ -232,12 +233,12 @@ function Home() {
 								<div className="tree-item-line"/>
 								<div className="tree-item-point"/>
 								{
-									_.get(o, `children.0.type`) === "text" &&
+									type === "text" &&
 									<div className="tree-item-content" contentEditable={true} suppressContentEditableWarning={true}
 									     onInput={(e) => handleEditMd(e, idx)}>{_.get(o, `children.0.value`)}</div>
 								}
 								{
-									_.get(o, `children.0.type`) === "image" && <img className="tree-item-img" src={_.get(o, `children.0.url`)} alt=""/>
+									type === "image" && <img className="tree-item-img" src={_.get(o, `children.0.url`)} alt=""/>
 								}
 							</div>
 						)
