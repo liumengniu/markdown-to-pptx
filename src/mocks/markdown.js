@@ -233,4 +233,4 @@ const mdStr2 = "# 直播新手指南：魅力主播的秘诀\n" +
 	"\n" +
 	"![结束语](https://source.unsplash.com/1000x600/?conclusion)"
 
-export default mdStr
+export default mdStr2
