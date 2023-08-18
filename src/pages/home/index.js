@@ -231,10 +231,13 @@ function Home() {
 								</div>
 								<div className="tree-item-line"/>
 								<div className="tree-item-point"/>
-								<div className="tree-item-content" contentEditable={true} suppressContentEditableWarning={true}
-								     onInput={(e) => handleEditMd(e, idx)}>{_.get(o, `children.0.value`)}</div>
 								{
-									_.get(o, `children.0.type`) === "image" && <img src={_.get(o, `children.0.url`)} alt=""/>
+									_.get(o, `children.0.type`) === "text" &&
+									<div className="tree-item-content" contentEditable={true} suppressContentEditableWarning={true}
+									     onInput={(e) => handleEditMd(e, idx)}>{_.get(o, `children.0.value`)}</div>
+								}
+								{
+									_.get(o, `children.0.type`) === "image" && <img className="tree-item-img" src={_.get(o, `children.0.url`)} alt=""/>
 								}
 							</div>
 						)
