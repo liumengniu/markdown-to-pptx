@@ -72,36 +72,14 @@ function Home() {
 		return pres
 	}
 
+	/**
+	 * 生成全部幻灯片
+	 */
 	const renderAllSlide = () =>{
 		const newMdStr = toMarkdown(rightData);
 		const tree = utils.parseMarkdownToTree(mdStr);
 		console.log(tree, '=====================treetreetreetreetree=====================', rightData)
 		!_.isEmpty(tree) && renderSlide(tree)
-	}
-	/**
-	 * 绘制全部幻灯片
-	 */
-	const renderSlides = () => {
-		const newMdStr = toMarkdown(rightData);
-		const tree = _.get(utils.parseMarkdownToTree(newMdStr),'0.children');
-		for (let i = 0; i < tree.length; i++) {
-			let item = tree[i];
-			let slide = pres.addSlide();
-			slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
-			slide && slide.addText(_.get(item, 'text'), {
-				x: "10%", y: '10%', w: "80%", h: "80%", color: "#666", fontSize: 30, valign: "top"
-			});
-			slide.addText(_.map(item?.children || [], o => ({text :o.text, options: { breakLine: true }})),
-				{ x: "10%", y: "24%", w: 8.5, h: 2.0, margin: 0.1 }
-			);
-			_.get(_.last(item?.children), 'images.0') && slide.addImage({
-				path: _.get(_.last(item?.children), 'images.0'),
-				x: "50%",
-				w: "50%",
-				h: "100%",
-				type: "cover"
-			});
-		}
 	}
 	/**
 	 * 递归绘制幻灯片
@@ -254,11 +232,44 @@ function Home() {
 		setData(newData)
 		setOptionsIdx(null)
 	}
+
+
+	/**
+	 * 渲染左侧目录树
+	 * contentEditable={true}会有光标闪现最前端的BUG，所以可编辑的div做成非受控组件（PS：递归渲染的div似乎很难解决此问题）
+	 * input有换行bug，textarea有高度bug
+	 * 经过取舍最后还是采用 contentEditable={true}
+	 */
+	const renderTree = tree => {
+		if (_.isEmpty(tree)){
+			return
+		}
+		return _.map(tree, (o, idx)=>{
+
+			return <div className={`tree-item tree-item-${idx} level-${o.level}`} key={`${idx}-${o.level}`}>
+				{
+					(o.type === "image" || o?.text) && <div className="tree-item-point"/>
+				}
+				<div className="tree-item-content">
+					{
+						o.type === "image" && <img className="tree-item-img" src={o.src} alt=""/>
+					}
+					{
+						o?.text &&<div>{o?.text}</div>
+					}
+					{
+						renderTree(o.children)
+					}
+				</div>
+			</div>
+		})
+	}
+
 	/**
 	 * 通过直接遍历渲染树节点
 	 * @returns {JSX.Element}
 	 */
-	const renderTree = () => {
+	const renderTree2 = () => {
 		let level = 1;
 		return (
 			<div className="tree" ref={ref}>
@@ -308,20 +319,22 @@ function Home() {
 		let newStr = toMarkdown(rightData)
 		alert(`输出markdown： \n${newStr}`)
 	}
-	
+
 	/**
 	 * 最终的markdown的str
 	 * @type {null|string}
 	 */
 	const markdownStr = _.isEmpty(rightData) ? null : toMarkdown(rightData);
-	
+	const tree = utils.parseMarkdownToTree(mdStr) || []
+	console.log(tree, 'treetreetreetreetreetreetreetreetreetreetree')
+
 	return (
 		<div className="md" >
-			
+
 			<div className="md-left">
 				<div className="btn" onClick={handleExport}>输出新markdown</div>
 				<div className="btn two" onClick={exportPptx}>输出pptx</div>
-				{renderTree()}
+				{renderTree(tree)}
 			</div>
 			<div className="md-middle">
 				<pre>

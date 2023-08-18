@@ -36,10 +36,6 @@
 		}
 
 		.tree{
-			img{
-				width: 320px;
-				height: 180px;
-			}
 			&-item{
 				display: flex;
 				align-items: center;
@@ -114,6 +110,10 @@
 					min-height: 24px;
 					border: none;
 					outline: none;
+				}
+				&-img{
+					width: 320px;
+					height: 180px;
 				}
 			}
 		}
