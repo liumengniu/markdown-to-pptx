@@ -91,7 +91,7 @@ function Home() {
 			slide && slide.addText(_.get(item, 'text'), {
 				x: "10%", y: '10%', w: "80%", h: "80%", color: "#666", fontSize: 30, valign: "top"
 			});
-			slide.addText(_.map(item?.children || [], o => ({text :o.text + "\n"})),
+			slide.addText(_.map(item?.children || [], o => ({text :o.text, options: { breakLine: true }})),
 				{ x: "10%", y: "24%", w: 8.5, h: 2.0, margin: 0.1 }
 			);
 			_.get(_.last(item?.children), 'images.0') && slide.addImage({
@@ -104,7 +104,11 @@ function Home() {
 		}
 	}
 	/**
-	 * 绘制幻灯片
+	 * 递归绘制幻灯片
+	 * 1、封面和目录要单独绘制
+	 * 2、递归渲染到倒数第二级，最后一级和父标题组成一张幻灯片
+	 * 3、gpt生成的每小节字数是不确定的，按照 0-80字符/80以上字符 字体大小分为2档，防止字体太多出幻灯片边界，字体太少显得空泛
+	 * 4、图片暂时放在左侧50%或者右侧50%，gpt生成内容不确定，很难做成极其通用的，后期按风格或分类做几套模板或者布局（纯体力活）
 	 */
 	const renderSlide = tree => {
 		_.map(tree, o=>{
@@ -134,7 +138,7 @@ function Home() {
 		slide && slide.addText("目录", {
 			x: "10%", y: '10%', w: "80%", h: "80%", color: "#666", fontSize: 30, valign: "top"
 		});
-		slide.addText(_.map(directoryData || [], o => ({text :o.text + "\n"})),
+		slide.addText(_.map(directoryData || [], o => ({text :o.text, options: { breakLine: true }})),
 			{ x: "10%", y: "24%", w: 8.5, h: 2.0, margin: 0.1 }
 		);
 	}
@@ -150,9 +154,22 @@ function Home() {
 		});
 		let children = item?.children || []
 		if(!_.isEmpty(children)){
+			let textCount = 0;
+			let textList = _.map(_.filter(children, o=> o.text), o => {
+				textCount += _.size(o.text);
+				return 	({text :o.text, options: { breakLine: true }})
+			}) || [];
 			let imgUrl = _.get(_.find(children, o=> o.type === 'image'), 'src');
-			slide && slide.addText(_.map(_.filter(children, o=> o.text), o => ({text :o.text + "\n"})), { x: "10%", y: "24%", w: imgUrl ? 4 : 8.5, h: 2.0, margin: 0.1 });
-			imgUrl && slide.addImage({path: imgUrl, x: "50%", w: "50%", h: "100%", type: "cover"})}
+			slide && slide.addText(textList, {
+				x: "10%",
+				y: "24%",
+				w: imgUrl ? 3.8 : 8.5,
+				h: 2.0,
+				margin: 0.1,
+				fontSize: textCount > 160 ? 10 : textCount > 80 ? 14 : 20
+			});
+			imgUrl && slide.addImage({path: imgUrl, x: "50%", w: "50%", h: "100%", type: "cover"})
+		}
 	}
 	/**
 	 * 导出pptx至本地
