@@ -57,7 +57,7 @@ function Home() {
 		setData(tree)
 		setRightData(tree)
 		const treeData = utils.parseMarkdownToTree(mdStr)
-		console.log(tree,'============================================', treeData)
+		// console.log(tree,'============================================', treeData)
 	}
 	/**
 	 * 渲染 html 版 web-pptx
@@ -72,19 +72,11 @@ function Home() {
 		return pres
 	}
 
-	/**
-	 * 绘制pptx封面
-	 */
-	const renderCover = () => {
-		let slide = pres.addSlide();
-		slide.background ={ path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
-		slide.addText(_.get(data, 'children.0.children.0.value'), {x: 0, y: '40%', w: "100%", color: "#ffffff", fontSize: 64, align: "center"});
-	}
-	/**
-	 * 绘制目录界面
-	 */
-	const renderDirectory = () =>{
-
+	const renderAllSlide = () =>{
+		const newMdStr = toMarkdown(rightData);
+		const tree = utils.parseMarkdownToTree(mdStr);
+		console.log(tree, '=====================treetreetreetreetree=====================', rightData)
+		!_.isEmpty(tree) && renderSlide(tree)
 	}
 	/**
 	 * 绘制全部幻灯片
@@ -97,7 +89,7 @@ function Home() {
 			let slide = pres.addSlide();
 			slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
 			slide && slide.addText(_.get(item, 'text'), {
-				x: "10%", y: '10%', w: "80%", h: "80%", color: "#333", fontSize: 30, valign: "top"
+				x: "10%", y: '10%', w: "80%", h: "80%", color: "#666", fontSize: 30, valign: "top"
 			});
 			slide.addText(_.map(item?.children || [], o => ({text :o.text + "\n"})),
 				{ x: "10%", y: "24%", w: 8.5, h: 2.0, margin: 0.1 }
@@ -112,21 +104,66 @@ function Home() {
 		}
 	}
 	/**
-	 * 绘制单张幻灯片
+	 * 绘制幻灯片
 	 */
-	const renderSlide = item => {
+	const renderSlide = tree => {
+		_.map(tree, o=>{
+			if(o.level && o.level === 1){  //渲染封面和目录
+				renderCover()
+				renderDirectory(o.children)
+			} else {  //渲染除封面/目录外的幻灯片（PS：只渲染至倒数第二级）
+				!_.isEmpty(o.children) && renderChildSlide(o)
+			}
+			return renderSlide(o.children)
+		})
+	}
+	/**
+	 * 绘制pptx封面
+	 */
+	const renderCover = () => {
+		let slide = pres.addSlide();
+		slide.background ={ path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
+		slide.addText(_.get(data, 'children.0.children.0.value'), {x: 0, y: '40%', w: "100%", color: "#666", fontSize: 64, align: "center"});
+	}
+	/**
+	 * 绘制目录界面
+	 */
+	const renderDirectory = directoryData =>{
 		let slide = pres.addSlide();
 		slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
+		slide && slide.addText("目录", {
+			x: "10%", y: '10%', w: "80%", h: "80%", color: "#666", fontSize: 30, valign: "top"
+		});
+		slide.addText(_.map(directoryData || [], o => ({text :o.text + "\n"})),
+			{ x: "10%", y: "24%", w: 8.5, h: 2.0, margin: 0.1 }
+		);
+	}
+	/**
+	 * 绘制底层幻灯
+	 * @param item
+	 */
+	const renderChildSlide = item => {
+		let slide = pres.addSlide();
+		slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
+		slide && slide.addText(_.get(item, 'text'), {
+			x: "10%", y: '10%', w: "80%", h: "80%", color: "#666", fontSize: 30, valign: "top"
+		});
+		let children = item?.children || []
+		if(!_.isEmpty(children)){
+			let imgUrl = _.get(_.find(children, o=> o.type === 'image'), 'src');
+			slide && slide.addText(_.map(_.filter(children, o=> o.text), o => ({text :o.text + "\n"})), { x: "10%", y: "24%", w: imgUrl ? 4 : 8.5, h: 2.0, margin: 0.1 });
+			imgUrl && slide.addImage({path: imgUrl, x: "50%", w: "50%", h: "100%", type: "cover"})}
 	}
 	/**
 	 * 导出pptx至本地
 	 */
 	const exportPptx = ()=>{
 		console.log("绘制封面")
-		renderCover()
+		// renderCover()
 		console.log("绘制全部slides")
-		renderSlides()
-		pres.writeFile({ fileName: "AIGC-PPTX.web-pptx" });
+		// renderSlides()
+		renderAllSlide()
+		pres.writeFile({ fileName: "AIGC-PPTX.pptx" });
 		console.log("执行导出pptx")
 		// pres.write("base64")
 		// 	.then((data) => {
@@ -275,7 +312,6 @@ function Home() {
 				</pre>
 			</div>
 			<div className="md-right">
-				{/*<div dangerouslySetInnerHTML={{__html: html}}/>*/}
 				<WebPptx markdownStr={markdownStr}/>
 			</div>
 		</div>
