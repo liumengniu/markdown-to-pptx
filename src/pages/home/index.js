@@ -6,7 +6,7 @@ import {toMarkdown} from "mdast-util-to-markdown"
 import {toHtml} from 'hast-util-to-html'
 import {toHast} from 'mdast-util-to-hast'
 import _ from "lodash"
-import { useClickAway } from 'ahooks';
+import {useClickAway} from 'ahooks';
 import pptxgen from "pptxgenjs";
 import utils from "../../utils";
 import WebPptx from "@comp/web-pptx";
@@ -20,7 +20,9 @@ let pres;
  */
 function Home() {
 	const [data, setData] = useState([])
-	const [rightData, setRightData] = useState([])
+	const tree = utils.parseMarkdownToTree(mdStr) || []
+	const [leftData, setLeftData] = useState(tree)
+	const [rightData, setRightData] = useState(tree)
 	const [html, setHtml] = useState(null)
 	const ref = useRef(null)
 
@@ -33,11 +35,8 @@ function Home() {
 		initData();
 	}, [])
 	useEffect(() => {
-		initPptx();
-	}, [])
-	useEffect(()=>{
 		initPres();
-	},[])
+	}, [])
 
 	/**
 	 * useClickAway 点击
@@ -54,15 +53,12 @@ function Home() {
 	const initData = () => {
 		const tree = fromMarkdown(mdStr)
 		renderHtml(tree)
-		setData(tree)
-		setRightData(tree)
+		// setData(tree)
+		// setRightData(tree)
 		const treeData = utils.parseMarkdownToTree(mdStr)
-		// console.log(tree,'============================================', treeData)
+		const test = utils.flattenToTree(tree?.children)
+		console.log(tree, '============================================', treeData)
 	}
-	/**
-	 * 渲染 html 版 web-pptx
-	 */
-	const initPptx = () =>{}
 
 	/**
 	 * 实例化pres
@@ -75,7 +71,7 @@ function Home() {
 	/**
 	 * 生成全部幻灯片
 	 */
-	const renderAllSlide = () =>{
+	const renderAllSlide = () => {
 		const newMdStr = toMarkdown(rightData);
 		const tree = utils.parseMarkdownToTree(mdStr);
 		console.log(tree, '=====================treetreetreetreetree=====================', rightData)
@@ -89,8 +85,8 @@ function Home() {
 	 * 4、图片暂时放在左侧50%或者右侧50%，gpt生成内容不确定，很难做成极其通用的，后期按风格或分类做几套模板或者布局（纯体力活）
 	 */
 	const renderSlide = tree => {
-		_.map(tree, o=>{
-			if(o.level && o.level === 1){  //渲染封面和目录
+		_.map(tree, o => {
+			if (o.level && o.level === 1) {  //渲染封面和目录
 				renderCover()
 				renderDirectory(o.children)
 			} else {  //渲染除封面/目录外的幻灯片（PS：只渲染至倒数第二级）
@@ -104,20 +100,27 @@ function Home() {
 	 */
 	const renderCover = () => {
 		let slide = pres.addSlide();
-		slide.background ={ path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
-		slide.addText(_.get(data, 'children.0.children.0.value'), {x: 0, y: '40%', w: "100%", color: "#666", fontSize: 64, align: "center"});
+		slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
+		slide.addText(_.get(data, 'children.0.children.0.value'), {
+			x: 0,
+			y: '40%',
+			w: "100%",
+			color: "#666",
+			fontSize: 64,
+			align: "center"
+		});
 	}
 	/**
 	 * 绘制目录界面
 	 */
-	const renderDirectory = directoryData =>{
+	const renderDirectory = directoryData => {
 		let slide = pres.addSlide();
 		slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
 		slide && slide.addText("目录", {
 			x: "10%", y: '10%', w: "80%", h: "80%", color: "#666", fontSize: 30, valign: "top"
 		});
-		slide.addText(_.map(directoryData || [], o => ({text :o.text, options: { breakLine: true }})),
-			{ x: "10%", y: "24%", w: 8.5, h: 2.0, margin: 0.1 }
+		slide.addText(_.map(directoryData || [], o => ({text: o.text, options: {breakLine: true}})),
+			{x: "10%", y: "24%", w: 8.5, h: 2.0, margin: 0.1}
 		);
 	}
 	/**
@@ -131,13 +134,13 @@ function Home() {
 			x: "10%", y: '10%', w: "80%", h: "80%", color: "#666", fontSize: 30, valign: "top"
 		});
 		let children = item?.children || []
-		if(!_.isEmpty(children)){
+		if (!_.isEmpty(children)) {
 			let textCount = 0;
-			let textList = _.map(_.filter(children, o=> o.text), o => {
+			let textList = _.map(_.filter(children, o => o.text), o => {
 				textCount += _.size(o.text);
-				return 	({text :o.text, options: { breakLine: true }})
+				return ({text: o.text, options: {breakLine: true}})
 			}) || [];
-			let imgUrl = _.get(_.find(children, o=> o.type === 'image'), 'src');
+			let imgUrl = _.get(_.find(children, o => o.type === 'image'), 'src');
 			slide && slide.addText(textList, {
 				x: "10%",
 				y: "24%",
@@ -152,13 +155,13 @@ function Home() {
 	/**
 	 * 导出pptx至本地
 	 */
-	const exportPptx = ()=>{
+	const exportPptx = () => {
 		console.log("绘制封面")
 		// renderCover()
 		console.log("绘制全部slides")
 		// renderSlides()
 		renderAllSlide()
-		pres.writeFile({ fileName: "AIGC-PPTX.pptx" });
+		pres.writeFile({fileName: "AIGC-PPTX.pptx"});
 		console.log("执行导出pptx")
 		// pres.write("base64")
 		// 	.then((data) => {
@@ -179,25 +182,39 @@ function Home() {
 		setHtml(lastHtml)
 	}
 	/**
-	 * 编辑左侧md树
+	 * 编辑左侧目录树
 	 */
-	const handleEditMd = (e, idx) => {
+	const handleEditMd = (e, idx, id) => {
+		// console.log(rightData, '===========================rightData=====================', e.target.textContent, idx, id)
 		const value = e.target.textContent;
-		if(value === ""){
+		if (value === "") {
 			removeItem(e, idx)
 			return
 		}
-		let item = _.cloneDeep(_.get(data, `children.${idx}`))
-		_.set(item, `children.${0}.value`, value)
-		let newData = _.cloneDeep(data) || [];
-		newData.children[idx] = item;
-		renderHtml(newData)
+		let oldData = _.cloneDeep(rightData)
+		let newData = setTreeData(oldData, value, id)
 		setRightData(newData)
+	}
+	/**
+	 * 编辑左侧目录树
+	 * @param treeData
+	 * @param value
+	 * @param id
+	 * @returns {unknown[]}
+	 */
+	const setTreeData = (treeData, value ,id) =>{
+		return _.map(treeData, o=>{
+			if(o.id === id){
+				o.text = value
+			}
+			o.children = setTreeData(o?.children, value ,id)
+			return o;
+		})
 	}
 	/**
 	 * 显示options
 	 */
-	const showOptions = idx =>{
+	const showOptions = idx => {
 		setOptionsIdx(idx)
 	}
 	/**
@@ -207,7 +224,7 @@ function Home() {
 		let newItem = _.cloneDeep(item);
 		_.set(newItem, `children.${0}.value`, "- ")
 		let newData = _.cloneDeep(data)
-		newData?.children?.splice(idx+1, 0,newItem)
+		newData?.children?.splice(idx + 1, 0, newItem)
 		setData(newData)
 		setOptionsIdx(null)
 	}
@@ -219,7 +236,7 @@ function Home() {
 		_.set(newItem, `children.${0}.value`, "- ")
 		_.set(newItem, `depth`, _.get(newItem, `depth`) + 1)
 		let newData = _.cloneDeep(data)
-		newData?.children?.splice(idx+1, 0,newItem)
+		newData?.children?.splice(idx + 1, 0, newItem)
 		setData(newData)
 		setOptionsIdx(null)
 	}
@@ -228,7 +245,7 @@ function Home() {
 	 */
 	const removeItem = (item, idx) => {
 		let newData = _.cloneDeep(data)
-		newData.children = _.filter(newData?.children, (o,i)=> i !== idx)
+		newData.children = _.filter(newData?.children, (o, i) => i !== idx)
 		setData(newData)
 		setOptionsIdx(null)
 	}
@@ -241,14 +258,15 @@ function Home() {
 	 * 经过取舍最后还是采用 contentEditable={true}
 	 */
 	const renderTree = tree => {
-		if (_.isEmpty(tree)){
+		if (_.isEmpty(tree)) {
 			return
 		}
-		let level = 1
-		return _.map(tree, (o, idx)=>{
-			level++;
-			return <div className={`tree-box tree-item-${idx} level-${o.level}`} key={`${idx}-${o.level}`} style={{marginLeft: o.level * 10 + "px"}}>
-				<div className="tree-item">
+		let level = 0;
+		return _.map(tree, (o, idx) => {
+			if (!_.isNil(o.level)) level = o.level;
+			return <div className={`tree-box tree-item-${idx} level-${o.level}`} key={`${idx}-${o.level}`}
+			            style={{marginLeft: o.level * 10 + "px"}}>
+				<div className="tree-item" style={{marginLeft: _.isNil(o.level) ? "20px" : ''}}>
 					{
 						(o.type === "image" || o?.text) && <div className="tree-item-point"/>
 					}
@@ -257,7 +275,8 @@ function Home() {
 							o.type === "image" && <img className="tree-item-img" src={o.src} alt=""/>
 						}
 						{
-							o?.text && <div>{o?.text}</div>
+							o?.text && <div className="tree-item-content" contentEditable={true} suppressContentEditableWarning={true}
+							                onInput={(e) => handleEditMd(e, idx, o.id)}>{o?.text}</div>
 						}
 					</div>
 				</div>
@@ -278,6 +297,7 @@ function Home() {
 			<div className="tree" ref={ref}>
 				{
 					_.map(data?.children, (o, idx) => {
+						level++;
 						if (!_.isNil(o?.depth)) level = o?.depth;
 						let type = _.get(o, `children.0.type`);
 						return (type === "text" || type === "image") && (
@@ -286,7 +306,7 @@ function Home() {
 							     key={idx}>
 								<div className="tree-item-box">
 									<div className="tree-item-add">
-										<span onClick={()=>showOptions(idx)}>+</span>
+										<span onClick={() => showOptions(idx)}>+</span>
 									</div>
 									<div className={`tree-item-options ${idx === optionsIdx ? 'active' : ''}`}>
 										<ul>
@@ -327,25 +347,25 @@ function Home() {
 	 * 最终的markdown的str
 	 * @type {null|string}
 	 */
-	const markdownStr = _.isEmpty(rightData) ? null : toMarkdown(_.cloneDeep(rightData));
-	const tree = utils.parseMarkdownToTree(mdStr) || []
-	console.log(tree, 'treetreetreetreetreetreetreetreetreetreetree')
+	// const markdownStr = _.isEmpty(rightData) ? null : toMarkdown(_.cloneDeep(rightData));
+	// const tree = utils.parseMarkdownToTree(mdStr) || []
+	// console.log(tree, 'treetreetreetreetreetreetreetreetreetreetree')
 
 	return (
-		<div className="md" >
+		<div className="md">
 
 			<div className="md-left">
 				<div className="btn" onClick={handleExport}>输出新markdown</div>
 				<div className="btn two" onClick={exportPptx}>输出pptx</div>
-				{renderTree(tree)}
+				{renderTree(leftData)}
 			</div>
 			<div className="md-middle">
 				<pre>
-					{markdownStr}
+					{/*{markdownStr}*/}
 				</pre>
 			</div>
 			<div className="md-right">
-				<WebPptx markdownStr={markdownStr}/>
+				{/*<WebPptx markdownStr={markdownStr}/>*/}
 			</div>
 		</div>
 	)
