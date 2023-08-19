@@ -244,23 +244,26 @@ function Home() {
 		if (_.isEmpty(tree)){
 			return
 		}
+		let level = 1
 		return _.map(tree, (o, idx)=>{
-
-			return <div className={`tree-item tree-item-${idx} level-${o.level}`} key={`${idx}-${o.level}`}>
-				{
-					(o.type === "image" || o?.text) && <div className="tree-item-point"/>
-				}
-				<div className="tree-item-content">
+			level++;
+			return <div className={`tree-box tree-item-${idx} level-${o.level}`} key={`${idx}-${o.level}`} style={{marginLeft: o.level * 10 + "px"}}>
+				<div className="tree-item">
 					{
-						o.type === "image" && <img className="tree-item-img" src={o.src} alt=""/>
+						(o.type === "image" || o?.text) && <div className="tree-item-point"/>
 					}
-					{
-						o?.text &&<div>{o?.text}</div>
-					}
-					{
-						renderTree(o.children)
-					}
+					<div className="tree-item-content">
+						{
+							o.type === "image" && <img className="tree-item-img" src={o.src} alt=""/>
+						}
+						{
+							o?.text && <div>{o?.text}</div>
+						}
+					</div>
 				</div>
+				{
+					renderTree(o.children)
+				}
 			</div>
 		})
 	}
@@ -316,7 +319,7 @@ function Home() {
 	 * 输出新的markdown的 str
 	 */
 	const handleExport = () => {
-		let newStr = toMarkdown(rightData)
+		let newStr = toMarkdown(_.cloneDeep(rightData))
 		alert(`输出markdown： \n${newStr}`)
 	}
 
@@ -324,7 +327,7 @@ function Home() {
 	 * 最终的markdown的str
 	 * @type {null|string}
 	 */
-	const markdownStr = _.isEmpty(rightData) ? null : toMarkdown(rightData);
+	const markdownStr = _.isEmpty(rightData) ? null : toMarkdown(_.cloneDeep(rightData));
 	const tree = utils.parseMarkdownToTree(mdStr) || []
 	console.log(tree, 'treetreetreetreetreetreetreetreetreetreetree')
 
