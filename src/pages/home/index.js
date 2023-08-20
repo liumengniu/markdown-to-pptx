@@ -205,7 +205,7 @@ function Home() {
 			return
 		}
 		let oldData = _.cloneDeep(rightData)
-		let newData = setTreeData(oldData, value, id)
+		let newData = setTreeData(oldData, value, id,"edit")
 		setRightData(newData)
 	}
 	/**
@@ -213,22 +213,31 @@ function Home() {
 	 * @param treeData
 	 * @param value
 	 * @param id
+	 * @param type
 	 * @returns {unknown[]}
 	 */
-	const setTreeData = (treeData, value ,id) =>{
+	const setTreeData = (treeData, value, id, type) => {
 		return _.map(treeData, o=>{
 			if(o.id === id){
-				o.text = value
+				if (type === "edit") { //编辑
+					o.text = value
+				} else if (type === "show") {  //显示操作模块
+					o.showOptions = !o.showOptions
+				}
+
 			}
-			o.children = setTreeData(o?.children, value ,id)
+			o.children = setTreeData(o?.children, value, id, type)
 			return o;
 		})
 	}
 	/**
 	 * 显示options
 	 */
-	const showOptions = idx => {
-		setOptionsIdx(idx)
+	const showOptions = id => {
+		let oldData = _.cloneDeep(rightData)
+		let newData = setTreeData(oldData, null, id, "show")
+		setLeftData(newData)
+		setRightData(newData)
 	}
 	/**
 	 * 添加节点
@@ -289,11 +298,11 @@ function Home() {
 								<div className="tree-item-point"/>
 								<div className="tree-item-box">
 									<div className="tree-item-add">
-										<span onClick={() => showOptions(idx)}>+</span>
+										<span onClick={() => showOptions(o.id)}>+</span>
 									</div>
-									<div className={`tree-item-options ${idx === optionsIdx ? 'active' : ''}`}>
+									<div className={`tree-item-options ${o.showOptions ? 'active' : ''}`}>
 										<ul>
-											<li onClick={() => addItem(o, idx)}>添加节点</li>
+											<li onClick={() => addItem(o, o.id)}>添加节点</li>
 											<li onClick={() => addChildItem(o, idx)}>添加子节点</li>
 											<li onClick={() => removeItem(o, idx)}>删除节点</li>
 											<li>添加图片</li>
@@ -342,7 +351,7 @@ function Home() {
 									<div className="tree-item-add">
 										<span onClick={() => showOptions(idx)}>+</span>
 									</div>
-									<div className={`tree-item-options ${idx === optionsIdx ? 'active' : ''}`}>
+									<div className={`tree-item-options ${o.showOptions ? 'active' : ''}`}>
 										<ul>
 											<li onClick={() => addItem(o, idx)}>添加节点</li>
 											<li onClick={() => addChildItem(o, idx)}>添加子节点</li>
