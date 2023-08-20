@@ -421,7 +421,7 @@ function Home() {
 		<div className="md">
 
 			<div className="md-left">
-				<div className="btn" onClick={handleExport}>输出新markdown</div>
+				{/*<div className="btn" onClick={handleExport}>输出新markdown</div>*/}
 				<div className="btn two" onClick={exportPptx}>输出pptx</div>
 				{renderTree(leftData)}
 			</div>
