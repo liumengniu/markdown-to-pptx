@@ -73,9 +73,9 @@ function Home() {
 	 */
 	const renderAllSlide = () => {
 		// const newMdStr = toMarkdown(rightData);
-		const tree = utils.parseMarkdownToTree(mdStr);
-		console.log(tree, '=====================treetreetreetreetree=====================', rightData)
-		!_.isEmpty(tree) && renderSlide(tree)
+		// const tree = utils.parseMarkdownToTree(mdStr);
+		// console.log(tree, '=====================treetreetreetreetree=====================', rightData)
+		!_.isEmpty(rightData) && renderSlide(rightData)
 	}
 	/**
 	 * 递归绘制幻灯片
