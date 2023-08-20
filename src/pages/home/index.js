@@ -278,7 +278,7 @@ function Home() {
 		return _.map(tree, (o, idx) => {
 			if (!_.isNil(o.level)) level = o.level;
 			return <div className={`tree-box tree-item-${idx} level-${o.level}`} key={`${idx}-${o.level}`}
-			            style={{marginLeft: o.level * 10 + "px"}}>
+			            style={{marginLeft:  "30px"}}>
 				{
 					!_.isNil(o.level) && o.type !== "list" && <div className="tree-item-line" />
 				}
