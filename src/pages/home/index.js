@@ -314,7 +314,7 @@ function Home() {
 				{
 					!_.isNil(o.level) && o.type !== "list" && <div className="tree-item-line" />
 				}
-				<div className="tree-item" style={{marginLeft: _.isNil(o.level) ? "20px" : ''}}>
+				<div className="tree-item" style={{marginLeft: _.isNil(o.level) ? "10px" : ''}}>
 					{
 						((o.type === "image" || o.type === "paragraph" || o.type === "listItem") || o?.text) && !_.isEmpty(o.children) &&
 							<div className="tree-item-position">
