@@ -72,7 +72,7 @@ function Home() {
 	 * 生成全部幻灯片
 	 */
 	const renderAllSlide = () => {
-		const newMdStr = toMarkdown(rightData);
+		// const newMdStr = toMarkdown(rightData);
 		const tree = utils.parseMarkdownToTree(mdStr);
 		console.log(tree, '=====================treetreetreetreetree=====================', rightData)
 		!_.isEmpty(tree) && renderSlide(tree)
@@ -86,8 +86,8 @@ function Home() {
 	 */
 	const renderSlide = tree => {
 		_.map(tree, o => {
-			if (o.level && o.level === 1) {  //渲染封面和目录
-				renderCover()
+			if (o.level && o.type==="section" && o.level === 1) {  //渲染封面和目录
+				renderCover(o)
 				renderDirectory(o.children)
 			} else {  //渲染除封面/目录外的幻灯片（PS：只渲染至倒数第二级）
 				!_.isEmpty(o.children) && renderChildSlide(o)
@@ -98,22 +98,17 @@ function Home() {
 	/**
 	 * 绘制pptx封面
 	 */
-	const renderCover = () => {
+	const renderCover = item => {
 		let slide = pres.addSlide();
 		slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
-		slide.addText(_.get(data, 'children.0.children.0.value'), {
-			x: 0,
-			y: '40%',
-			w: "100%",
-			color: "#666",
-			fontSize: 64,
-			align: "center"
-		});
+		slide.addText(_.get(item, 'text'), {
+			x: 0, y: '40%', w: "100%", color: "#666", fontSize: 64, align: "center"});
 	}
 	/**
 	 * 绘制目录界面
 	 */
 	const renderDirectory = directoryData => {
+		console.log("========绘制目录界面===========")
 		let slide = pres.addSlide();
 		slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
 		slide && slide.addText("目录", {
@@ -138,7 +133,7 @@ function Home() {
 			let textCount = 0;
 			let textList = _.map(_.filter(children, o => o.text), o => {
 				textCount += _.size(o.text);
-				return ({text: o.text, options: {breakLine: true}})
+				return ({text: o.text, options: {breakLine: true, bullet: item.type === "list"}})
 			}) || [];
 			let imgUrl = _.get(_.find(children, o => o.type === 'image'), 'src');
 			slide && slide.addText(textList, {
