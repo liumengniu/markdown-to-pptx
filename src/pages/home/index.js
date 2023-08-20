@@ -284,7 +284,25 @@ function Home() {
 				}
 				<div className="tree-item" style={{marginLeft: _.isNil(o.level) ? "20px" : ''}}>
 					{
-						((o.type === "image" || o.type === "paragraph" || o.type === "listItem") || o?.text) && !_.isEmpty(o.children) && <div className="tree-item-point"/>
+						((o.type === "image" || o.type === "paragraph" || o.type === "listItem") || o?.text) && !_.isEmpty(o.children) &&
+							<div className="tree-item-position">
+								<div className="tree-item-point"/>
+								<div className="tree-item-box">
+									<div className="tree-item-add">
+										<span onClick={() => showOptions(idx)}>+</span>
+									</div>
+									<div className={`tree-item-options ${idx === optionsIdx ? 'active' : ''}`}>
+										<ul>
+											<li onClick={() => addItem(o, idx)}>添加节点</li>
+											<li onClick={() => addChildItem(o, idx)}>添加子节点</li>
+											<li onClick={() => removeItem(o, idx)}>删除节点</li>
+											<li>添加图片</li>
+											<li>子节点添加图片</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+
 					}
 					<div className="tree-item-content">
 						{
