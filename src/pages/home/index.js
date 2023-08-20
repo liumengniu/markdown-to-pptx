@@ -90,9 +90,11 @@ function Home() {
 				renderCover(o)
 				renderDirectory(o.children)
 			} else {  //渲染除封面/目录外的幻灯片（PS：只渲染至倒数第二级）
-				!_.isEmpty(o.children) && renderChildSlide(o)
+				(!_.isEmpty(o.children) && o.type !== "list")  && renderChildSlide(o)
 			}
-			return renderSlide(o.children)
+			if(!_.isEmpty(o.children) && o.type !== "list"){
+				return renderSlide(o.children)
+			}
 		})
 	}
 	/**
@@ -112,7 +114,7 @@ function Home() {
 		let slide = pres.addSlide();
 		slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
 		slide && slide.addText("目录", {
-			x: "10%", y: '10%', w: "80%", h: "80%", color: "#666", fontSize: 30, valign: "top"
+			x: "9%", y: '10%', w: "80%", h: "80%", color: "#666", fontSize: 30, valign: "top"
 		});
 		slide.addText(_.map(directoryData || [], o => ({text: o.text, options: {breakLine: true}})),
 			{x: "10%", y: "24%", w: 8.5, h: 2.0, margin: 0.1}
@@ -126,26 +128,46 @@ function Home() {
 		let slide = pres.addSlide();
 		slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
 		slide && slide.addText(_.get(item, 'text'), {
-			x: "10%", y: '10%', w: "80%", h: "80%", color: "#666", fontSize: 30, valign: "top"
+			x: "9%", y: '10%', w: "80%", h: "80%", color: "#666", fontSize: 30, valign: "top"
 		});
-		let children = item?.children || []
-		if (!_.isEmpty(children)) {
+		let itemChild = item?.children || []
+		if (!_.isEmpty(itemChild)) {
 			let textCount = 0;
+			let idx = _.findIndex(itemChild, o => o.type === "list");
+			let children = []
+			if(_.isNumber(idx)){
+				children = flattenDepthOne(itemChild);
+			}
 			let textList = _.map(_.filter(children, o => o.text), o => {
 				textCount += _.size(o.text);
-				return ({text: o.text, options: {breakLine: true, bullet: item.type === "list"}})
+				return ({text: o.text, options: {breakLine: true, bullet: o.type === "listItem"}})
 			}) || [];
 			let imgUrl = _.get(_.find(children, o => o.type === 'image'), 'src');
 			slide && slide.addText(textList, {
 				x: "10%",
 				y: "24%",
-				w: imgUrl ? 3.8 : 8.5,
-				h: 2.0,
+				w: imgUrl ? 4.8 : 8.5,
+				h: textCount > 160 ? 3.0 : textCount > 120 ? 2.5 : 2.0,
 				margin: 0.1,
-				fontSize: textCount > 160 ? 10 : textCount > 80 ? 14 : 20
+				fontSize: textCount > 160 ? 10 : textCount > 80 ? 14 : 20,
+				paraSpaceBefore: 2,
+				paraSpaceAfter: 4,
 			});
-			imgUrl && slide.addImage({path: imgUrl, x: "50%", w: "50%", h: "100%", type: "cover"})
+			imgUrl && slide.addImage({path: imgUrl, x: "60%", w: "40%", h: "100%", type: "cover"})
 		}
+	}
+	/***
+	 * 展平数组
+	 */
+	const flattenDepthOne = list => {
+		let newList = [];
+		_.map(list, o => {
+			if (o.type === "list" && !_.isEmpty(o?.children)) {
+				newList = _.concat([], newList, o?.children)
+			}
+			newList.push(o);
+		})
+		return newList
 	}
 	/**
 	 * 导出pptx至本地

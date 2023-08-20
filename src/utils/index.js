@@ -73,7 +73,7 @@ const utils = {
 					listStack?.push(currentSection);
 					currentSection = newList;
 				}
-				const newItem = { type: 'item', text, children: [], id: short.generate() };
+				const newItem = { type: 'listItem', text, children: [], id: short.generate() };
 				currentSection.children?.push(newItem);
 			} else if (matchImage) {
 				const altText = matchImage[1];
