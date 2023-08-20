@@ -72,9 +72,6 @@ function Home() {
 	 * 生成全部幻灯片
 	 */
 	const renderAllSlide = () => {
-		// const newMdStr = toMarkdown(rightData);
-		// const tree = utils.parseMarkdownToTree(mdStr);
-		// console.log(tree, '=====================treetreetreetreetree=====================', rightData)
 		!_.isEmpty(rightData) && renderSlide(rightData)
 	}
 	/**
@@ -202,7 +199,6 @@ function Home() {
 	 * 编辑左侧目录树
 	 */
 	const handleEditMd = (e, idx, id) => {
-		// console.log(rightData, '===========================rightData=====================', e.target.textContent, idx, id)
 		const value = e.target.textContent;
 		if (value === "") {
 			removeItem(e, idx)
@@ -283,6 +279,9 @@ function Home() {
 			if (!_.isNil(o.level)) level = o.level;
 			return <div className={`tree-box tree-item-${idx} level-${o.level}`} key={`${idx}-${o.level}`}
 			            style={{marginLeft: o.level * 10 + "px"}}>
+				{
+					!_.isNil(o.level) && o.type !== "list" && <div className="tree-item-line" />
+				}
 				<div className="tree-item" style={{marginLeft: _.isNil(o.level) ? "20px" : ''}}>
 					{
 						(o.type === "image" || o?.text) && <div className="tree-item-point"/>
