@@ -11,6 +11,7 @@ import pptxgen from "pptxgenjs";
 import utils from "../../utils";
 import WebPptx from "@comp/web-pptx";
 
+const short = require('short-uuid');
 let pres;
 
 /**
@@ -224,11 +225,27 @@ function Home() {
 				} else if (type === "show") {  //显示操作模块
 					o.showOptions = !o.showOptions
 				}
-
 			}
 			o.children = setTreeData(o?.children, value, id, type)
 			return o;
 		})
+	}
+	/**
+	 * 操作目录树节点
+	 */
+	const operateTreeData = (treeData, item, idx, type) =>{
+		let isMatch = false
+		_.map(treeData, o=>{
+			if(o.id === item.id){
+				console.log("执行了多少遍---------------", o)
+				isMatch = true;
+				treeData?.splice(idx + 1, 0, _.cloneDeep({...item, text: " ", showOptions: false, id: short.generate()}));
+			} else {
+				o.children = operateTreeData(o.children, item, idx, type)
+				return o;
+			}
+		})
+		return treeData
 	}
 	/**
 	 * 显示options
@@ -243,12 +260,18 @@ function Home() {
 	 * 添加节点
 	 */
 	const addItem = (item, idx) => {
-		let newItem = _.cloneDeep(item);
-		_.set(newItem, `children.${0}.value`, "- ")
-		let newData = _.cloneDeep(data)
-		newData?.children?.splice(idx + 1, 0, newItem)
-		setData(newData)
-		setOptionsIdx(null)
+		let oldData = _.cloneDeep(rightData)
+		let newData = operateTreeData(oldData, item, idx, "add")
+		setLeftData(newData)
+		setRightData(newData)
+
+
+		// let newItem = _.cloneDeep(item);
+		// _.set(newItem, `children.${0}.value`, "- ")
+		// let newData = _.cloneDeep(data)
+		// newData?.children?.splice(idx + 1, 0, newItem)
+		// setData(newData)
+		// setOptionsIdx(null)
 	}
 	/**
 	 * 添加子节点
