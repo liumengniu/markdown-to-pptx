@@ -22,6 +22,7 @@ let pres;
 function Home() {
 	const [data, setData] = useState([])
 	const tree = utils.parseMarkdownToTree(mdStr) || []
+	console.log(tree, "===========tree=========")
 	const [leftData, setLeftData] = useState(tree)
 	const [rightData, setRightData] = useState(tree)
 	const [html, setHtml] = useState(null)
@@ -58,7 +59,7 @@ function Home() {
 		// setRightData(tree)
 		const treeData = utils.parseMarkdownToTree(mdStr)
 		const test = utils.flattenToTree(tree?.children)
-		console.log(tree, '============================================', treeData)
+		// console.log(tree, '============================================', treeData)
 	}
 
 	/**
@@ -237,9 +238,15 @@ function Home() {
 		let isMatch = false
 		_.map(treeData, o=>{
 			if(o.id === item.id){
-				console.log("执行了多少遍---------------", o)
+				console.log("执行了多少遍---------------", o, item)
 				isMatch = true;
-				treeData?.splice(idx + 1, 0, _.cloneDeep({...item, text: " ", showOptions: false, id: short.generate()}));
+				if(type === "add"){
+					treeData?.splice(idx + 1, 0, _.cloneDeep({...item, text: " ", children: [],showOptions: false, id: short.generate()}));
+				} else if(type === "addChild"){
+					o.children.push(o.children[o.children?.length -1])
+				} else if(type === "remove"){
+
+				}
 			} else {
 				o.children = operateTreeData(o.children, item, idx, type)
 				return o;
@@ -261,17 +268,10 @@ function Home() {
 	 */
 	const addItem = (item, idx) => {
 		let oldData = _.cloneDeep(rightData)
+		console.log(oldData, 'oldDataoldDataoldData============oldData===')
 		let newData = operateTreeData(oldData, item, idx, "add")
 		setLeftData(newData)
 		setRightData(newData)
-
-
-		// let newItem = _.cloneDeep(item);
-		// _.set(newItem, `children.${0}.value`, "- ")
-		// let newData = _.cloneDeep(data)
-		// newData?.children?.splice(idx + 1, 0, newItem)
-		// setData(newData)
-		// setOptionsIdx(null)
 	}
 	/**
 	 * 添加子节点
@@ -325,7 +325,7 @@ function Home() {
 									</div>
 									<div className={`tree-item-options ${o.showOptions ? 'active' : ''}`}>
 										<ul>
-											<li onClick={() => addItem(o, o.id)}>添加节点</li>
+											<li onClick={() => addItem(o, idx)}>添加节点</li>
 											<li onClick={() => addChildItem(o, idx)}>添加子节点</li>
 											<li onClick={() => removeItem(o, idx)}>删除节点</li>
 											<li>添加图片</li>
