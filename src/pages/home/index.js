@@ -237,18 +237,24 @@ function Home() {
 	const operateTreeData = (treeData, item, idx, type) =>{
 		let isMatch = false
 		_.map(treeData, o=>{
-			if(o.id === item.id){
-				console.log("执行了多少遍---------------", o, item)
+			if(!o){
+				return
+			}
+			if(o?.id === item?.id){
 				isMatch = true;
 				if(type === "add"){
 					treeData?.splice(idx + 1, 0, _.cloneDeep({...item, text: " ", children: [],showOptions: false, id: short.generate()}));
+					setTreeData(treeData, item?.text, item?.id, "show")
 				} else if(type === "addChild"){
-					o.children.push(o.children[o.children?.length -1])
+					let neeItem = o.children[o.children?.length -1]
+					o.children.push({...neeItem, text: " ", children: [], id: short.generate()})
+					setTreeData(treeData, item?.text, item?.id, "show")
 				} else if(type === "remove"){
-
+					setTreeData(treeData, item?.text, item?.id, "show")
+					treeData?.splice(idx, 1);
 				}
 			} else {
-				o.children = operateTreeData(o.children, item, idx, type)
+				o.children = !_.isEmpty(o?.children) ? operateTreeData(o?.children, item, idx, type) : []
 				return o;
 			}
 		})
@@ -268,7 +274,6 @@ function Home() {
 	 */
 	const addItem = (item, idx) => {
 		let oldData = _.cloneDeep(rightData)
-		console.log(oldData, 'oldDataoldDataoldData============oldData===')
 		let newData = operateTreeData(oldData, item, idx, "add")
 		setLeftData(newData)
 		setRightData(newData)
@@ -277,25 +282,20 @@ function Home() {
 	 * 添加子节点
 	 */
 	const addChildItem = (item, idx) => {
-		let newItem = _.cloneDeep(item);
-		_.set(newItem, `children.${0}.value`, "- ")
-		_.set(newItem, `depth`, _.get(newItem, `depth`) + 1)
-		let newData = _.cloneDeep(data)
-		newData?.children?.splice(idx + 1, 0, newItem)
-		setData(newData)
-		setOptionsIdx(null)
+		let oldData = _.cloneDeep(rightData)
+		let newData = operateTreeData(oldData, item, idx, "addChild")
+		setLeftData(newData)
+		setRightData(newData)
 	}
 	/**
 	 * 删除节点
 	 */
 	const removeItem = (item, idx) => {
-		let newData = _.cloneDeep(data)
-		newData.children = _.filter(newData?.children, (o, i) => i !== idx)
-		setData(newData)
-		setOptionsIdx(null)
+		let oldData = _.cloneDeep(rightData)
+		let newData = operateTreeData(oldData, item, idx, "remove")
+		setLeftData(newData)
+		setRightData(newData)
 	}
-
-
 	/**
 	 * 渲染左侧目录树
 	 * contentEditable={true}会有光标闪现最前端的BUG，所以可编辑的div做成非受控组件（PS：递归渲染的div似乎很难解决此问题）
@@ -316,7 +316,7 @@ function Home() {
 				}
 				<div className="tree-item" style={{marginLeft: _.isNil(o.level) ? "10px" : ''}}>
 					{
-						((o.type === "image" || o.type === "paragraph" || o.type === "listItem") || o?.text) && !_.isEmpty(o.children) &&
+						((o.type === "image" || o.type === "paragraph" || o.type === "listItem") || o?.text) &&
 							<div className="tree-item-position">
 								<div className="tree-item-point"/>
 								<div className="tree-item-box">
