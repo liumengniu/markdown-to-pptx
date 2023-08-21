@@ -428,11 +428,11 @@ function Home() {
 				<div className="btn two" onClick={exportPptx}>输出pptx</div>
 				{renderTree(leftData)}
 			</div>
-			<div className="md-middle">
-				<pre>
-					{/*{markdownStr}*/}
-				</pre>
-			</div>
+			{/*<div className="md-middle">*/}
+			{/*	<pre>*/}
+			{/*		{markdownStr}*/}
+			{/*	</pre>*/}
+			{/*</div>*/}
 			<div className="md-right">
 				<WebPptx rightData={rightData}/>
 			</div>

@@ -27,16 +27,20 @@ function WebPptx(props) {
 	 * 绘制全部幻灯片
 	 */
 	const renderAllSlide = () => {
-		!_.isEmpty(rightData) && renderSlide(rightData)
+		if(!_.isEmpty(rightData)){
+			return renderSlide(rightData)
+		} else {
+			return null
+		}
 	}
 	/**
 	 * 渲染幻灯片的html
 	 */
 	const renderSlide = tree => {
+		let html = null;
 		_.map(tree, o => {
 			if (o.level && o.type === "section" && o.level === 1) {  //渲染封面和目录
-				renderCover(o)
-				renderDirectory(o.children)
+				html = renderCoverAndDirectory(o)
 			} else {  //渲染除封面/目录外的幻灯片（PS：只渲染至倒数第二级）
 				(!_.isEmpty(o.children) && o.type !== "list") && renderChildSlide(o)
 			}
@@ -44,19 +48,32 @@ function WebPptx(props) {
 				return renderSlide(o.children)
 			}
 		})
+		return html;
 	}
 	/**
 	 * 渲染封面
 	 * @param item
 	 * @returns {JSX.Element}
 	 */
-	const renderCover = item => {
+	const renderCoverAndDirectory = item => {
 		return (
-			<SwiperSlide>
-				<div className="cover-slide" style={{textAlign: "center", color: "#ffffff", fontSize: 24, fontWeight: 'bold'}}>
-					{_.get(item, `text`)}
-				</div>
-			</SwiperSlide>
+			<>
+				<SwiperSlide>
+					<div className="cover-slide" style={{textAlign: "center", color: "#ffffff", fontSize: 24, fontWeight: 'bold'}}>
+						{_.get(item, `text`)}
+					</div>
+				</SwiperSlide>
+				<SwiperSlide>
+					<div className="directory-slide">
+						<h2>目录</h2>
+						<div>
+							{_.map(_.get(item, `children`), o=>{
+								return <span key={o?.id}>{o?.text}</span>
+							})}
+						</div>
+					</div>
+				</SwiperSlide>
+			</>
 		)
 	}
 	/**
@@ -99,12 +116,6 @@ function WebPptx(props) {
 		)
 	}
 	
-	/**
-	 * 渲染slider， API尽量和 pptxgenjs 贴近，保持渲染版和导出版差异最小
-	 */
-	const renderSlider = () => {
-	
-	}
 	
 	return (
 		<div className="web-pptx">
@@ -118,8 +129,15 @@ function WebPptx(props) {
 				onSlideChange={() => console.log('slide change')}
 				onSwiper={(swiper) => console.log(swiper)}
 			>
+				{/*<SwiperSlide>*/}
+				{/*	<div className="cover-slide" style={{textAlign: "center", color: "#ffffff", fontSize: 24, fontWeight: 'bold'}}>*/}
+				{/*		{"eeee"}*/}
+				{/*	</div>*/}
+				{/*</SwiperSlide>*/}
+				{/*{renderCoverAndDirectory()}*/}
 				{/*{renderCover()}*/}
 				{/*{renderSlides()}*/}
+				{renderAllSlide()}
 			</Swiper>
 		</div>
 	)

@@ -13,6 +13,16 @@
 				top: 40%;
 				left: 10%;
 			}
+			.directory-slide{
+				padding: 9%;
+				box-sizing: border-box;
+				>div:last-child{
+					display: flex;
+					flex-direction: column;
+				}
+			}
+
+
 			.slide-title{
 				//position: absolute;
 				//top: 10%;

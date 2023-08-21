@@ -5,7 +5,6 @@
 	overflow-y: hidden;
 
 	&-left{
-		//width: 40%;
 		width: 100%;
 		white-space: pre-wrap;
 		word-wrap: break-word;
@@ -140,16 +139,16 @@
 			}
 		}
 	}
-	&-middle{
-		width: 30%;
-		padding: 20px;
-		box-sizing: border-box;
-		word-wrap: break-word;
-		max-height: 100vh;
-		overflow-y: auto;
-	}
+	//&-middle{
+	//	width: 30%;
+	//	padding: 20px;
+	//	box-sizing: border-box;
+	//	word-wrap: break-word;
+	//	max-height: 100vh;
+	//	overflow-y: auto;
+	//}
 	&-right{
-		width: 30%;
+		width: 40%;
 		padding: 20px;
 		box-sizing: border-box;
 		overflow-x: hidden;
