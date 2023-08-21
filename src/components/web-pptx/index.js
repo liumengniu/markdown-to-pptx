@@ -42,10 +42,10 @@ function WebPptx(props) {
 			if (o.level && o.type === "section" && o.level === 1) {  //渲染封面和目录
 				html = renderCoverAndDirectory(o)
 			} else {  //渲染除封面/目录外的幻灯片（PS：只渲染至倒数第二级）
-				(!_.isEmpty(o.children) && o.type !== "list") && renderChildSlide(o)
+				html = (!_.isEmpty(o.children) && o.type !== "list") ? renderChildSlide(o) : null
 			}
 			if (!_.isEmpty(o.children) && o.type !== "list") {
-				return renderSlide(o.children)
+				html = renderSlide(o.children)
 			}
 		})
 		return html;
