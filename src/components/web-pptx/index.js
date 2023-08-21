@@ -20,7 +20,7 @@ function WebPptx(props) {
 	console.log(rightData, '===========================rightData========================')
 
 	useEffect(() => {
-		renderAllSlide()
+		// renderAllSlide()
 	}, [])
 
 	/**
@@ -44,10 +44,11 @@ function WebPptx(props) {
 			} else {  //渲染除封面/目录外的幻灯片（PS：只渲染至倒数第二级）
 				html += (!_.isEmpty(o.children) && o.type !== "list") ? renderChildSlide(o) : null
 			}
-			// if (!_.isEmpty(o.children) && o.type !== "list") {
-			// 	html += renderSlide(o.children)
-			// }
+			if (!_.isEmpty(o.children) && o.type !== "list") {
+				// html += renderSlide(o.children)
+			}
 		})
+		console.log(html, 'htmlhtmlhtmlhtmlhtmlhtmlhtmlhtmlhtmlhtmlhtml')
 		return html;
 	}
 	/**
@@ -81,32 +82,6 @@ function WebPptx(props) {
 	 */
 	const renderChildSlide = () => {
 		let html = null;
-	}
-	/**
-	 * 渲染全部slide
-	 */
-	const renderSlides = () => {
-		const slidesTree = _.get(mdTree, '0.children');
-		return (
-			<div className="other-slides">
-				{
-					_.map(slidesTree, (o, idx) => {
-						return (
-							<SwiperSlide key={idx}>
-								<div className={"slide-title"}>{o?.text}</div>
-								{
-									_.map(o?.children, (p,childIdx)=> {
-										return (
-											<div key={`${idx}-${childIdx}`} className={"slide-list-title"}>{p?.text}</div>
-										)
-								})
-								}
-							</SwiperSlide>
-						)
-					})
-				}
-			</div>
-		)
 	}
 
 
