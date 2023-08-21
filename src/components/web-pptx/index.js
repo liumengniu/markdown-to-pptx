@@ -15,6 +15,8 @@ import {useEffect} from "react";
 import utils from "@utils";
 import _ from "lodash";
 
+let html = null;
+
 function WebPptx(props) {
 	const {rightData} = props
 	console.log(rightData, '===========================rightData========================')
@@ -37,7 +39,7 @@ function WebPptx(props) {
 	 * 渲染幻灯片的html
 	 */
 	const renderSlide = tree => {
-		let html = null;
+		// let html = null;
 		_.map(tree, o => {
 			if (o.level && o.type === "section" && o.level === 1) {  //渲染封面和目录
 				html = renderCoverAndDirectory(o)
@@ -45,7 +47,7 @@ function WebPptx(props) {
 				html += (!_.isEmpty(o.children) && o.type !== "list") ? renderChildSlide(o) : null
 			}
 			if (!_.isEmpty(o.children) && o.type !== "list") {
-				// html += renderSlide(o.children)
+				html += renderSlide(o.children)
 			}
 		})
 		console.log(html, 'htmlhtmlhtmlhtmlhtmlhtmlhtmlhtmlhtmlhtmlhtml')
@@ -80,8 +82,22 @@ function WebPptx(props) {
 	/**
 	 * 渲染子级幻灯片
 	 */
-	const renderChildSlide = () => {
+	const renderChildSlide = item => {
 		let html = null;
+		return (
+			<>
+				<SwiperSlide>
+					<div className="common-slide">
+						<h2>{item?.text}</h2>
+						<div>
+							{_.map(_.get(item, `children`), o=>{
+								return <span key={o?.id}>{o?.text}</span>
+							})}
+						</div>
+					</div>
+				</SwiperSlide>
+			</>
+		)
 	}
 
 
