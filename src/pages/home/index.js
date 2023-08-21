@@ -246,6 +246,7 @@ function Home() {
 					treeData?.splice(idx + 1, 0, _.cloneDeep({...item, text: " ", children: [],showOptions: false, id: short.generate()}));
 					setTreeData(treeData, item?.text, item?.id, "show")
 				} else if(type === "addChild"){
+					if (_.isEmpty(o.children)) o.children = []
 					let neeItem = o.children[o.children?.length -1]
 					o.children.push({...neeItem, text: " ", children: [], id: short.generate()})
 					setTreeData(treeData, item?.text, item?.id, "show")
@@ -326,7 +327,9 @@ function Home() {
 									<div className={`tree-item-options ${o.showOptions ? 'active' : ''}`}>
 										<ul>
 											<li onClick={() => addItem(o, idx)}>添加节点</li>
-											<li onClick={() => addChildItem(o, idx)}>添加子节点</li>
+											{
+												 _.isNumber(o.level) && <li onClick={() => addChildItem(o, idx)}>添加子节点</li>
+											}
 											<li onClick={() => removeItem(o, idx)}>删除节点</li>
 											<li>添加图片</li>
 											<li>子节点添加图片</li>
