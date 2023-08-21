@@ -272,28 +272,37 @@ function Home() {
 	}
 	/**
 	 * 添加节点
+	 * @param item
+	 * @param idx
 	 */
 	const addItem = (item, idx) => {
-		let oldData = _.cloneDeep(rightData)
-		let newData = operateTreeData(oldData, item, idx, "add")
-		setLeftData(newData)
-		setRightData(newData)
+		operateTree(item, idx, "add")
 	}
 	/**
 	 * 添加子节点
+	 * @param item
+	 * @param idx
 	 */
 	const addChildItem = (item, idx) => {
-		let oldData = _.cloneDeep(rightData)
-		let newData = operateTreeData(oldData, item, idx, "addChild")
-		setLeftData(newData)
-		setRightData(newData)
+		operateTree(item, idx, "addChild")
 	}
 	/**
 	 * 删除节点
+	 * @param item
+	 * @param idx
 	 */
 	const removeItem = (item, idx) => {
+		operateTree(item, idx, "remove")
+	}
+	/**
+	 * 操作树节点（新增节点/新增子节点/删除节点）
+	 * @param item
+	 * @param idx
+	 * @param type
+	 */
+	const operateTree = (item, idx, type) =>{
 		let oldData = _.cloneDeep(rightData)
-		let newData = operateTreeData(oldData, item, idx, "remove")
+		let newData = operateTreeData(oldData, item, idx, type)
 		setLeftData(newData)
 		setRightData(newData)
 	}

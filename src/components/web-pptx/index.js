@@ -18,11 +18,11 @@ import _ from "lodash";
 function WebPptx(props) {
 	const {rightData} = props
 	console.log(rightData, '===========================rightData========================')
-	
+
 	useEffect(() => {
 		renderAllSlide()
 	}, [])
-	
+
 	/**
 	 * 绘制全部幻灯片
 	 */
@@ -51,7 +51,7 @@ function WebPptx(props) {
 		return html;
 	}
 	/**
-	 * 渲染封面
+	 * 渲染封面&目录
 	 * @param item
 	 * @returns {JSX.Element}
 	 */
@@ -77,17 +77,10 @@ function WebPptx(props) {
 		)
 	}
 	/**
-	 * 渲染目录
-	 * @param item
-	 */
-	const renderDirectory = item => {
-	
-	}
-	/**
 	 * 渲染子级幻灯片
 	 */
 	const renderChildSlide = () => {
-	
+		let html = null;
 	}
 	/**
 	 * 渲染全部slide
@@ -115,8 +108,8 @@ function WebPptx(props) {
 			</div>
 		)
 	}
-	
-	
+
+
 	return (
 		<div className="web-pptx">
 			<Swiper
