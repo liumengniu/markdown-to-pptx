@@ -42,7 +42,7 @@ function WebPptx(props) {
 		// let html = null;
 		_.map(tree, o => {
 			if (o.level && o.type === "section" && o.level === 1) {  //渲染封面和目录
-				html = renderCoverAndDirectory(o, oldHtml)
+				// html = renderCoverAndDirectory(o, oldHtml)
 			} else {  //渲染除封面/目录外的幻灯片（PS：只渲染至倒数第二级）
 				html = (!_.isEmpty(o.children) && o.type !== "list") ? renderChildSlide(o, html) : null
 			}
