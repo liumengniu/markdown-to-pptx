@@ -38,16 +38,17 @@ function WebPptx(props) {
 	/**
 	 * 渲染幻灯片的html
 	 */
-	const renderSlide = tree => {
+	const renderSlide = (tree, oldHtml) => {
 		// let html = null;
 		_.map(tree, o => {
 			if (o.level && o.type === "section" && o.level === 1) {  //渲染封面和目录
-				html = renderCoverAndDirectory(o)
+				html = renderCoverAndDirectory(o, oldHtml)
 			} else {  //渲染除封面/目录外的幻灯片（PS：只渲染至倒数第二级）
-				html += (!_.isEmpty(o.children) && o.type !== "list") ? renderChildSlide(o, html) : null
+				html = (!_.isEmpty(o.children) && o.type !== "list") ? renderChildSlide(o, html) : null
 			}
 			if (!_.isEmpty(o.children) && o.type !== "list") {
-				html += renderSlide(o.children)
+				// html += renderSlide(o.children)
+				html = renderSlide(o.children, html)
 			}
 		})
 		console.log(html, 'htmlhtmlhtmlhtmlhtmlhtmlhtmlhtmlhtmlhtmlhtml')
@@ -58,9 +59,10 @@ function WebPptx(props) {
 	 * @param item
 	 * @returns {JSX.Element}
 	 */
-	const renderCoverAndDirectory = item => {
+	const renderCoverAndDirectory = (item, oldHtml) => {
 		return (
 			<>
+				<oldHtml />
 				<SwiperSlide>
 					<div className="cover-slide" style={{textAlign: "center", color: "#ffffff", fontSize: 24, fontWeight: 'bold'}}>
 						{_.get(item, `text`)}
