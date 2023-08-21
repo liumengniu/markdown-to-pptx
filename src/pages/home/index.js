@@ -434,7 +434,7 @@ function Home() {
 				</pre>
 			</div>
 			<div className="md-right">
-				{/*<WebPptx markdownStr={markdownStr}/>*/}
+				<WebPptx rightData={rightData}/>
 			</div>
 		</div>
 	)

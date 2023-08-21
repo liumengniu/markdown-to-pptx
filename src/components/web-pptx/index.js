@@ -16,26 +16,61 @@ import utils from "@utils";
 import _ from "lodash";
 
 function WebPptx(props) {
-	const {markdownStr} = props
-	const mdTree = markdownStr ? utils.parseMarkdownToTree(markdownStr) : []
-	// console.log(mdTree, '===========================mdTree========================')
+	const {rightData} = props
+	console.log(rightData, '===========================rightData========================')
 	
 	useEffect(() => {
-	
+		renderAllSlide()
 	}, [])
 	
 	/**
+	 * 绘制全部幻灯片
+	 */
+	const renderAllSlide = () => {
+		!_.isEmpty(rightData) && renderSlide(rightData)
+	}
+	/**
+	 * 渲染幻灯片的html
+	 */
+	const renderSlide = tree => {
+		_.map(tree, o => {
+			if (o.level && o.type === "section" && o.level === 1) {  //渲染封面和目录
+				renderCover(o)
+				renderDirectory(o.children)
+			} else {  //渲染除封面/目录外的幻灯片（PS：只渲染至倒数第二级）
+				(!_.isEmpty(o.children) && o.type !== "list") && renderChildSlide(o)
+			}
+			if (!_.isEmpty(o.children) && o.type !== "list") {
+				return renderSlide(o.children)
+			}
+		})
+	}
+	/**
 	 * 渲染封面
+	 * @param item
 	 * @returns {JSX.Element}
 	 */
-	const renderCover = () => {
+	const renderCover = item => {
 		return (
 			<SwiperSlide>
-				<div className="cover-slide" style={{textAlign: "center",color: "#ffffff", fontSize: 24, fontWeight: 'bold'}}>
-					{_.get(mdTree, `0.text`)}
+				<div className="cover-slide" style={{textAlign: "center", color: "#ffffff", fontSize: 24, fontWeight: 'bold'}}>
+					{_.get(item, `text`)}
 				</div>
 			</SwiperSlide>
 		)
+	}
+	/**
+	 * 渲染目录
+	 * @param item
+	 */
+	const renderDirectory = item => {
+	
+	}
+	/**
+	 * 渲染子级幻灯片
+	 */
+	const renderChildSlide = () => {
+	
 	}
 	/**
 	 * 渲染全部slide
@@ -83,8 +118,8 @@ function WebPptx(props) {
 				onSlideChange={() => console.log('slide change')}
 				onSwiper={(swiper) => console.log(swiper)}
 			>
-				{renderCover()}
-				{renderSlides()}
+				{/*{renderCover()}*/}
+				{/*{renderSlides()}*/}
 			</Swiper>
 		</div>
 	)
