@@ -15,7 +15,6 @@ import {useEffect, useState} from "react";
 import utils from "@utils";
 import _ from "lodash";
 
-let html = null;
 let list = [];
 
 function WebPptx(props) {
@@ -44,6 +43,11 @@ function WebPptx(props) {
 		let pptxData = flattenTree(rightData)
 		return (
 			<>
+				<SwiperSlide>
+					<div className="cover-slide" style={{textAlign: "center", fontSize: 24, fontWeight: 'bold'}}>
+						{_.get(pptxData, `0.text`)}
+					</div>
+				</SwiperSlide>
 				{
 					_.map(pptxData, (o, idx)=>{
 						return (
