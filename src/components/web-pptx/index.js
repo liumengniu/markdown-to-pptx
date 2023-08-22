@@ -16,53 +16,92 @@ import utils from "@utils";
 import _ from "lodash";
 
 let html = null;
+let list = [];
 
 function WebPptx(props) {
 	const {rightData} = props
-	console.log(rightData, '===========================rightData========================')
+	
 
 	useEffect(() => {
-		// renderAllSlide()
+		renderAllSlide()
 	}, [])
-
+	
+	/**
+	 * 展平树结构 -> pptx所需数组
+	 * @param data
+	 */
+	const flattenTree = data =>{
+		_.map(data, o=>{
+			if(o.type==="section"){
+				flattenTree(o?.children)
+			} else {
+				list.push(o)
+			}
+		})
+		// console.log(list, 'listlistlistlistlistlistlistlistlistlistlistlist')
+		return list
+	}
 	/**
 	 * 绘制全部幻灯片
 	 */
 	const renderAllSlide = () => {
+		let pptxData = flattenTree(rightData)
+		console.log(rightData, '===========================rightData========================', pptxData)
+		html = renderCoverAndDirectory(_.get(rightData, `0`));
 		if(!_.isEmpty(rightData)){
-			return renderSlide(rightData)
+			return renderSlide(rightData, html)
 		} else {
 			return null
 		}
 	}
 	/**
 	 * 渲染幻灯片的html
+	 * @param tree
+	 * @param oldHtml
+	 * @returns {null}
 	 */
-	const renderSlide = (tree, oldHtml) => {
+	const renderSlide2 = (tree, oldHtml) => {
 		// let html = null;
+		// let newHtml = null;
 		_.map(tree, o => {
 			if (o.level && o.type === "section" && o.level === 1) {  //渲染封面和目录
-				// html = renderCoverAndDirectory(o, oldHtml)
+				html = renderCoverAndDirectory(o)
 			} else {  //渲染除封面/目录外的幻灯片（PS：只渲染至倒数第二级）
-				html = (!_.isEmpty(o.children) && o.type !== "list") ? renderChildSlide(o, html) : null
+				// html = (!_.isEmpty(o.children) && o.type !== "list") ? renderChildSlide(o, oldHtml) : null
+				// html = (!_.isEmpty(o.children) && o.type !== "list") ? renderChildSlide(o, oldHtml) : null
+				// html = !_.isEmpty(o.children) ? renderChildSlide(o, oldHtml) : null
+				html = renderChildSlide(o, oldHtml)
 			}
 			if (!_.isEmpty(o.children) && o.type !== "list") {
-				// html += renderSlide(o.children)
+				// renderSlide(o.children, html)
 				html = renderSlide(o.children, html)
 			}
+			return o;
 		})
 		console.log(html, 'htmlhtmlhtmlhtmlhtmlhtmlhtmlhtmlhtmlhtmlhtml')
 		return html;
 	}
+	
+	const renderSlide = (tree, oldHtml) => {
+		_.map(tree, o=>{
+			if(!_.isEmpty(o?.children)){
+				html += renderSlide(o?.children, oldHtml)
+			} else {
+				// html += renderChildSlide(o, oldHtml)
+			}
+			return o;
+		})
+		return html
+	}
 	/**
 	 * 渲染封面&目录
 	 * @param item
+	 * @param oldHtml
 	 * @returns {JSX.Element}
 	 */
-	const renderCoverAndDirectory = (item, oldHtml) => {
+	const renderCoverAndDirectory = (item) => {
 		return (
 			<>
-				<oldHtml />
 				<SwiperSlide>
 					<div className="cover-slide" style={{textAlign: "center", color: "#ffffff", fontSize: 24, fontWeight: 'bold'}}>
 						{_.get(item, `text`)}
@@ -84,16 +123,17 @@ function WebPptx(props) {
 	/**
 	 * 渲染子级幻灯片
 	 */
-	const renderChildSlide = (item, html) => {
+	const renderChildSlide = (item, oldHtml) => {
+		console.log("执行了多少次renderChildSlide==")
 		return (
 			<>
-				<html />
+				{oldHtml}
 				<SwiperSlide>
 					<div className="common-slide">
 						<h2>{item?.text}</h2>
 						<div>
 							{_.map(_.get(item, `children`), o=>{
-								return <span key={o?.id}>{o?.text}</span>
+								return <div key={o?.id}>{o?.text}</div>
 							})}
 						</div>
 					</div>
@@ -102,6 +142,7 @@ function WebPptx(props) {
 		)
 	}
 
+	// console.log(html, 'htmlhtmlhtmlhtmlhtmlhtmlhtmlhtmlhtmlhtml')
 
 	return (
 		<div className="web-pptx">
@@ -123,7 +164,10 @@ function WebPptx(props) {
 				{/*{renderCoverAndDirectory()}*/}
 				{/*{renderCover()}*/}
 				{/*{renderSlides()}*/}
-				{renderSlide(rightData)}
+				
+				{/*{renderSlide(rightData)}*/}
+				
+				{html}
 			</Swiper>
 		</div>
 	)
