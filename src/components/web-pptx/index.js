@@ -45,18 +45,20 @@ function WebPptx(props) {
 		return (
 			<>
 				{
-					_.map(pptxData, o=>{
+					_.map(pptxData, (o, idx)=>{
 						return (
-							<SwiperSlide>
-								<div className="common-slide">
-									<h2>{o?.text}</h2>
-									<div>
-										{_.map(_.get(o, `children`), p=>{
-											return <div key={o?.id}>{p?.text}</div>
-										})}
+							<div key={idx}>
+								<SwiperSlide >
+									<div className="common-slide">
+										<h2>{o?.text}</h2>
+										<div>
+											{_.map(_.get(o, `children`), p=>{
+												return <div key={p?.id}>{p?.text}</div>
+											})}
+										</div>
 									</div>
-								</div>
-							</SwiperSlide>
+								</SwiperSlide>
+							</div>
 						)
 					})
 				}

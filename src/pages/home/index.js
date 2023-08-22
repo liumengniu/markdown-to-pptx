@@ -27,8 +27,7 @@ function Home() {
 	const [rightData, setRightData] = useState(tree)
 	const [html, setHtml] = useState(null)
 	const ref = useRef(null)
-
-	const [optionsIdx, setOptionsIdx] = useState(null)
+	
 
 	/**
 	 * useEffect
@@ -44,7 +43,7 @@ function Home() {
 	 * useClickAway 点击
 	 */
 	useClickAway(() => {
-		setOptionsIdx(null)
+	
 	}, ref);
 
 	// const
@@ -55,11 +54,6 @@ function Home() {
 	const initData = () => {
 		const tree = fromMarkdown(mdStr)
 		renderHtml(tree)
-		// setData(tree)
-		// setRightData(tree)
-		const treeData = utils.parseMarkdownToTree(mdStr)
-		const test = utils.flattenToTree(tree?.children)
-		// console.log(tree, '============================================', treeData)
 	}
 
 	/**
@@ -364,55 +358,6 @@ function Home() {
 			</div>
 		})
 	}
-
-	/**
-	 * 通过直接遍历渲染树节点
-	 * @returns {JSX.Element}
-	 */
-	const renderTree2 = () => {
-		let level = 1;
-		return (
-			<div className="tree" ref={ref}>
-				{
-					_.map(data?.children, (o, idx) => {
-						level++;
-						if (!_.isNil(o?.depth)) level = o?.depth;
-						let type = _.get(o, `children.0.type`);
-						return (type === "text" || type === "image") && (
-							<div className={` tree-item ${'tree-item-' + o?.depth}`}
-							     style={{marginLeft: o?.type === "paragraph" ? level * 30 + "px" : (o?.depth - 1) * 30 + "px"}}
-							     key={idx}>
-								<div className="tree-item-box">
-									<div className="tree-item-add">
-										<span onClick={() => showOptions(idx)}>+</span>
-									</div>
-									<div className={`tree-item-options ${o.showOptions ? 'active' : ''}`}>
-										<ul>
-											<li onClick={() => addItem(o, idx)}>添加节点</li>
-											<li onClick={() => addChildItem(o, idx)}>添加子节点</li>
-											<li onClick={() => removeItem(o, idx)}>删除节点</li>
-											<li>添加图片</li>
-											<li>子节点添加图片</li>
-										</ul>
-									</div>
-								</div>
-								<div className="tree-item-line"/>
-								<div className="tree-item-point"/>
-								{
-									type === "text" &&
-									<div className="tree-item-content" contentEditable={true} suppressContentEditableWarning={true}
-									     onInput={(e) => handleEditMd(e, idx)}>{_.get(o, `children.0.value`)}</div>
-								}
-								{
-									type === "image" && <img className="tree-item-img" src={_.get(o, `children.0.url`)} alt=""/>
-								}
-							</div>
-						)
-					})
-				}
-			</div>
-		)
-	}
 	/**
 	 * 输出新的markdown的 str
 	 */
@@ -420,14 +365,7 @@ function Home() {
 		let newStr = toMarkdown(_.cloneDeep(rightData))
 		alert(`输出markdown： \n${newStr}`)
 	}
-
-	/**
-	 * 最终的markdown的str
-	 * @type {null|string}
-	 */
-	// const markdownStr = _.isEmpty(rightData) ? null : toMarkdown(_.cloneDeep(rightData));
-	// const tree = utils.parseMarkdownToTree(mdStr) || []
-	// console.log(tree, 'treetreetreetreetreetreetreetreetreetreetree')
+	
 
 	return (
 		<div className="md">
@@ -437,11 +375,6 @@ function Home() {
 				<div className="btn two" onClick={exportPptx}>输出pptx</div>
 				{renderTree(leftData)}
 			</div>
-			{/*<div className="md-middle">*/}
-			{/*	<pre>*/}
-			{/*		{markdownStr}*/}
-			{/*	</pre>*/}
-			{/*</div>*/}
 			<div className="md-right">
 				<WebPptx rightData={rightData}/>
 			</div>
