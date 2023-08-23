@@ -69,33 +69,6 @@ function WebPptx(props) {
 			</>
 		)
 	}
-	/**
-	 * 渲染封面&目录
-	 * @param item
-	 * @param oldHtml
-	 * @returns {JSX.Element}
-	 */
-	const renderCoverAndDirectory = (item) => {
-		return (
-			<>
-				<SwiperSlide>
-					<div className="cover-slide" style={{textAlign: "center", color: "#ffffff", fontSize: 24, fontWeight: 'bold'}}>
-						{_.get(item, `text`)}
-					</div>
-				</SwiperSlide>
-				<SwiperSlide>
-					<div className="directory-slide">
-						<h2>目录</h2>
-						<div>
-							{_.map(_.get(item, `children`), o=>{
-								return <span key={o?.id}>{o?.text}</span>
-							})}
-						</div>
-					</div>
-				</SwiperSlide>
-			</>
-		)
-	}
 
 	return (
 		<div className="web-pptx">
