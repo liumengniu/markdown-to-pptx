@@ -8,7 +8,7 @@
 
 ## 🎞️ 项目介绍
 
-> 使用 gpt-3.5-turbo 生成markdown。 \
+> 使用 gpt-3.5-turbo 生成markdown。[项目地址](https://github.com/limaoyi1/Auto-PPT). \
 > 使通过在线版markdown树结构优化和编辑markdown，生成最终需要的pptx版式。 \
 > 以下是通过项目生成的原始示例，未经任何修改：
 > ![image](https://github.com/liumengniu/markdown-to-pptx/assets/24428623/fa096602-d0ad-4312-b4c2-d85eb0b9bb39)
