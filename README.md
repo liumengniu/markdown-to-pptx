@@ -12,6 +12,7 @@
 > 使通过在线版markdown树结构优化和编辑markdown，生成最终需要的pptx版式。 \
 > 以下是通过项目生成的原始示例，未经任何修改：
 > ![img.png](https://user-images.githubusercontent.com/24428623/262570709-6015c4da-a9de-4623-81a4-8bba10cc3203.png)
+> > 以下是生成的pptx，未经任何修改：
 > ![aigc-pptx](https://github.com/liumengniu/markdown-to-pptx/assets/24428623/3beccf39-0cd9-4ab9-9201-d42737a2bc97)
 
 
