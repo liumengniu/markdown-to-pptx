@@ -21,6 +21,8 @@ function WebPptx(props) {
 	let list = [];
 	const {rightData} = props
 	
+	console.log(rightData, '==============rightData=======rightData')
+	
 	useEffect(() => {
 		renderAllSlide()
 	}, [])
