@@ -54,11 +54,14 @@ function WebPptx(props) {
 							<div key={idx}>
 								<SwiperSlide >
 									<div className="common-slide">
-										<h2>{o?.text}</h2>
-										<div>
-											{_.map(_.get(o, `children`), p=>{
-												return <div key={p?.id}>{p?.text}</div>
-											})}
+										<div className="common">
+											<h2>{o?.text}</h2>
+											<div>
+												{_.map(_.get(o, `children`), p => {
+													return <div className="common-content" key={p?.id}
+													            style={{fontSize: _.size(p?.text) > 160 ? "8px" : _.size(p?.text) > 120 ? "10px" : "14px"}}>{p?.text}</div>
+												})}
+											</div>
 										</div>
 									</div>
 								</SwiperSlide>

@@ -26,9 +26,14 @@
 			}
 
 			.common-slide {
-				padding: 9%;
-				h2 {
-					margin-top: 0
+				.common{
+					padding: 9%;
+					h2 {
+						margin-top: 0
+					}
+					&-content{
+
+					}
 				}
 			}
 		}
