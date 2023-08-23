@@ -20,7 +20,6 @@ let pres;
  * @date 2023/8/10
  */
 function Home() {
-	const [data, setData] = useState([])
 	const tree = utils.parseMarkdownToTree(mdStr) || []
 	console.log(tree, "===========tree=========")
 	const [leftData, setLeftData] = useState(tree)
@@ -166,10 +165,6 @@ function Home() {
 	 * 导出pptx至本地
 	 */
 	const exportPptx = () => {
-		console.log("绘制封面")
-		// renderCover()
-		console.log("绘制全部slides")
-		// renderSlides()
 		renderAllSlide()
 		pres.writeFile({fileName: "AIGC-PPTX.pptx"});
 		console.log("执行导出pptx")

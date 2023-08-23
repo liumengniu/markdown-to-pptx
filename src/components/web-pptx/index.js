@@ -18,6 +18,7 @@ import _ from "lodash";
 let list = [];
 
 function WebPptx(props) {
+	let list = [];
 	const {rightData} = props
 	
 	useEffect(() => {
@@ -41,6 +42,7 @@ function WebPptx(props) {
 	 */
 	const renderAllSlide = () => {
 		let pptxData = flattenTree(rightData)
+		console.log(pptxData, '=======pptxData=======')
 		return (
 			<>
 				<SwiperSlide>
@@ -58,8 +60,37 @@ function WebPptx(props) {
 											<h2>{o?.text}</h2>
 											<div>
 												{_.map(_.get(o, `children`), p => {
-													return <div className="common-content" key={p?.id}
-													            style={{fontSize: _.size(p?.text) > 160 ? "8px" : _.size(p?.text) > 120 ? "10px" : "14px"}}>{p?.text}</div>
+													let hasImg = _.findIndex(_.get(o, `children`), a=> a.type === "image") > -1;
+													let textCount = _.size(p?.text);
+													if(p?.type === "list"){
+														_.map(p?.children, a=>{
+															textCount += _.size(a?.text)
+														})
+													}
+													return (
+														<>
+															{
+																p?.text && <div className="common-content" key={p?.id}
+																  style={{fontSize: textCount > 160 ? "8px" : textCount > 120 ? "10px" : "16px",
+																	  width: hasImg ? "60%" : "100%"}}>
+																	{p?.text}
+																</div>
+															}
+															{
+																p?.type === "list" &&
+																<ul className="common-list">
+																	{
+																		_.map(p?.children, q=>{
+																			return <li key={q?.id}>{q?.text}</li>
+																		})
+																	}
+																</ul>
+															}
+															{
+																p?.type === "image" && <img className="common-img" src={p?.src} alt=""/>
+															}
+														</>
+													)
 												})}
 											</div>
 										</div>
