@@ -34,16 +34,25 @@ function WebPptx(props) {
 		})
 		return list
 	}
+	const [pptxData, setData] = useState(flattenTree(rightData))
+	
 	/**
-	 * 获取全部幻灯片的长度
-	 * @type {number}
+	 * 获取单页幻灯片字数统计
 	 */
-	const slideSize = _.size(flattenTree(rightData))
+	const getCount = tree => {
+		let count = 0;
+		_.map(tree, o => {
+			count += _.size(o?.text);
+			o?.type === "list" && _.map(o.children, p => {
+				count += _.size(p?.text);
+			})
+		})
+		return count
+	}
 	/**
 	 * 绘制全部幻灯片
 	 */
 	const renderAllSlide = () => {
-		let pptxData = flattenTree(rightData)
 		return (
 			<>
 				<SwiperSlide>
@@ -52,7 +61,7 @@ function WebPptx(props) {
 					</div>
 				</SwiperSlide>
 				{
-					_.map(pptxData, (o, idx)=>{
+					_.map(pptxData, o => {
 						return (
 							<div key={o?.id}>
 								<SwiperSlide  key={o?.id}>
@@ -62,12 +71,7 @@ function WebPptx(props) {
 											<div>
 												{_.map(_.get(o, `children`), p => {
 													let hasImg = _.findIndex(_.get(o, `children`), a=> a.type === "image") > -1;
-													let textCount = _.size(p?.text);
-													if(p?.type === "list"){
-														_.map(p?.children, a=>{
-															textCount += _.size(a?.text)
-														})
-													}
+													let textCount = getCount(o?.children);
 													return (
 														<div key={p?.id}>
 															{
@@ -115,6 +119,9 @@ function WebPptx(props) {
 	 * 下一张
 	 */
 	const handleNavigateNext = () => {
+		if(activeIndex >= _.size(pptxData)){
+			return
+		}
 		let swiperDom = ref.current.swiper;
 		swiperDom && swiperDom.slideNext();
 	}
@@ -127,6 +134,7 @@ function WebPptx(props) {
 				pagination={{
 					type: 'fraction',
 				}}
+				loop={false}
 				modules={[Navigation, Pagination]}
 				onSlideChange={(e) => setActiveIndex(e.activeIndex)}
 			>
@@ -134,7 +142,7 @@ function WebPptx(props) {
 				<div className="slide-navigator">
 					<div className="slide-navigator-left navigator-arrow" onClick={handleNavigatePrev}>{"←"}</div>
 					<div className="slide-navigator-pagination">
-						{`${activeIndex}/${slideSize}`}
+						{`${activeIndex}/${_.size(pptxData)}`}
 					</div>
 					<div className="slide-navigator-right navigator-arrow" onClick={handleNavigateNext}>{"→"}</div>
 				</div>
