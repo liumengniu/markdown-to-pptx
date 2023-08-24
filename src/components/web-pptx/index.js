@@ -19,9 +19,6 @@ function WebPptx(props) {
 	let list = [];
 	const {rightData} = props
 	
-	useEffect(() => {
-		renderAllSlide()
-	}, [])
 	/**
 	 * 展平树结构 -> pptx所需数组
 	 * @param data
@@ -50,8 +47,8 @@ function WebPptx(props) {
 				{
 					_.map(pptxData, (o, idx)=>{
 						return (
-							<div key={o?.id + idx}>
-								<SwiperSlide >
+							<div key={o?.id}>
+								<SwiperSlide  key={o?.id}>
 									<div className="common-slide">
 										<div className="common">
 											<h2>{o?.text}</h2>
@@ -67,7 +64,7 @@ function WebPptx(props) {
 													return (
 														<div key={p?.id}>
 															{
-																p?.text && <div className="common-content" key={p?.id}
+																p?.text && <div className="common-content"
 																  style={{fontSize: textCount > 160 ? "8px" : textCount > 120 ? "10px" : "16px",
 																	  width: hasImg ? "60%" : "100%"}}>
 																	{p?.text}
@@ -77,7 +74,7 @@ function WebPptx(props) {
 																p?.type === "list" &&
 																<ul className="common-list">
 																	{
-																		_.map(p?.children, q=>{
+																		_.map(p?.children, q => {
 																			return <li key={q?.id}>{q?.text}</li>
 																		})
 																	}
