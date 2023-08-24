@@ -35,6 +35,7 @@ function WebPptx(props) {
 		return list
 	}
 	const [pptxData, setData] = useState(flattenTree(rightData))
+	console.log(pptxData,'pptxDatapptxDatapptxDatapptxDatapptxData')
 	
 	/**
 	 * 获取单页幻灯片字数统计
@@ -67,7 +68,7 @@ function WebPptx(props) {
 								<SwiperSlide  key={o?.id}>
 									<div className="common-slide">
 										<div className="common">
-											<h2>{o?.text}</h2>
+											<h2>{o?.level === 1 && o.type !== "list" ? "目录" : o?.text}</h2>
 											<div>
 												{_.map(_.get(o, `children`), p => {
 													let hasImg = _.findIndex(_.get(o, `children`), a=> a.type === "image") > -1;
