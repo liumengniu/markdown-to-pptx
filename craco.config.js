@@ -5,6 +5,8 @@
 
 const path = require("path");
 const webpack = require("webpack");
+const { whenProd } = require("@craco/craco")
+const TerserPlugin = require("terser-webpack-plugin")
 
 module.exports = {
   devServer: {
@@ -24,6 +26,55 @@ module.exports = {
           },
         }),
       webpackConfig.ignoreWarnings = [/Failed to parse source map/];
+      whenProd(() => {
+        webpackConfig.optimization.minimize = true
+        webpackConfig.optimization.minimizer.map(plugin => {
+          if (plugin instanceof TerserPlugin) {
+            Object.assign(plugin.options.minimizer.options.compress, {
+              drop_debugger: true, // 删除 debugger
+              drop_console: true, // 删除 console
+              pure_funcs: ["console.log"]
+            })
+          }
+          return plugin
+        })
+        webpackConfig.optimization.runtimeChunk = "single"
+        webpackConfig.optimization.splitChunks = {
+          ...webpackConfig.optimization.splitChunks,
+          chunks: "all",
+          minSize: 30000,
+          maxAsyncRequests: 30,
+          maxInitialRequests: 30,
+          cacheGroups: {
+            defaultVendors: {
+              test: /[\\/]node_modules[\\/]/,
+              name: "vendors"
+            },
+            antd: {
+              test: /lodash/,
+              name: "lodash",
+              priority: 90
+            },
+            echarts: {
+              test: /ahooks/,
+              name: "ahooks",
+              priority: 90
+            },
+            base: {
+              chunks: "all",
+              test: /(react|react-dom|react-dom-router)/,
+              name: "base",
+              priority: 100
+            },
+            commons: {
+              chunks: "all",
+              minChunks: 2,
+              name: "commons",
+              priority: 110
+            }
+          }
+        }
+      })
       return webpackConfig;
     },
     alias: {
