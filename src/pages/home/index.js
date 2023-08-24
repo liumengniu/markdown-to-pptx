@@ -10,6 +10,7 @@ import {useClickAway} from 'ahooks';
 import pptxgen from "pptxgenjs";
 import utils from "../../utils";
 import WebPptx from "@comp/web-pptx";
+import EditorTree from "@comp/editor-tree";
 
 const short = require('short-uuid');
 let pres;
@@ -391,7 +392,9 @@ function Home() {
 
 			<div className="md-left" ref={ref}>
 				<div className="btn two" onClick={exportPptx}>输出pptx</div>
-				{renderTree(leftData)}
+				{/*{renderTree(leftData)}*/}
+				<EditorTree leftData={leftData} showOptions={showOptions} addItem={addItem} addChildItem={addChildItem}
+				            removeItem={removeItem} handleEditMd={handleEditMd}/>
 			</div>
 			<div className="md-right">
 				<WebPptx rightData={rightData}/>
