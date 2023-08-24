@@ -2,6 +2,7 @@
 	.swiper {
 		width: 640px;
 		height: 360px;
+		position: relative;
 		.swiper-slide {
 			background: url("https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg");
 			background-size: 100% 100%;
@@ -12,17 +13,6 @@
 				position: absolute;
 				top: 40%;
 				left: 10%;
-			}
-			.directory-slide{
-				padding: 9%;
-				box-sizing: border-box;
-				h2{
-					margin-top: 0;
-				}
-				>div:last-child{
-					display: flex;
-					flex-direction: column;
-				}
 			}
 
 			.common-slide {
@@ -52,6 +42,46 @@
 						object-fit: fill;
 					}
 				}
+			}
+		}
+
+		.slide-navigator{
+			z-index: 2;
+			width: 100%;
+			position: absolute;
+			bottom: 10px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			>div.navigator-arrow{
+				text-align: center;
+				width: 40px;
+				height: 40px;
+				line-height: 40px;
+				cursor: pointer;
+				border-radius: 5px;
+				background-color: gray;
+				color: #fff;
+				opacity: .7;
+			}
+			&-left{
+			}
+			&-pagination{
+				text-align: center;
+				margin: 0 40px;
+				width: 70px;
+				height: 20px;
+				border-radius: 5px;
+				line-height: 20px;
+				font-size: 14px;
+				font-weight: 700;
+				background-color: #383838;
+				color: white;
+				opacity: .7;
+			}
+
+			&-right{
+
 			}
 		}
 	}

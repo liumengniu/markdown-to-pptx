@@ -11,13 +11,15 @@ import {Navigation, Pagination} from "swiper";
 import "swiper/css/navigation";
 // Import Swiper styles
 import 'swiper/css';
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import utils from "@utils";
 import _ from "lodash";
 
 function WebPptx(props) {
 	let list = [];
 	const {rightData} = props
+	const [activeIndex, setActiveIndex] = useState(1)
+	const ref = useRef();
 	
 	/**
 	 * 展平树结构 -> pptx所需数组
@@ -32,6 +34,11 @@ function WebPptx(props) {
 		})
 		return list
 	}
+	/**
+	 * 获取全部幻灯片的长度
+	 * @type {number}
+	 */
+	const slideSize = _.size(flattenTree(rightData))
 	/**
 	 * 绘制全部幻灯片
 	 */
@@ -97,18 +104,40 @@ function WebPptx(props) {
 			</>
 		)
 	}
+	/**
+	 * 上一张
+	 */
+	const handleNavigatePrev = () => {
+		let swiperDom = ref.current.swiper;
+		swiperDom && swiperDom.slidePrev();
+	}
+	/**
+	 * 下一张
+	 */
+	const handleNavigateNext = () => {
+		let swiperDom = ref.current.swiper;
+		swiperDom && swiperDom.slideNext();
+	}
 
 	return (
 		<div className="web-pptx">
 			<Swiper
+				ref={ref}
 				className="swiper"
-				navigation={true}
 				pagination={{
 					type: 'fraction',
 				}}
 				modules={[Navigation, Pagination]}
+				onSlideChange={(e) => setActiveIndex(e.activeIndex)}
 			>
 				{renderAllSlide()}
+				<div className="slide-navigator">
+					<div className="slide-navigator-left navigator-arrow" onClick={handleNavigatePrev}>{"←"}</div>
+					<div className="slide-navigator-pagination">
+						{`${activeIndex}/${slideSize}`}
+					</div>
+					<div className="slide-navigator-right navigator-arrow" onClick={handleNavigateNext}>{"→"}</div>
+				</div>
 			</Swiper>
 		</div>
 	)
