@@ -15,13 +15,9 @@ import {useEffect, useState} from "react";
 import utils from "@utils";
 import _ from "lodash";
 
-let list = [];
-
 function WebPptx(props) {
 	let list = [];
 	const {rightData} = props
-	
-	console.log(rightData, '==============rightData=======rightData')
 	
 	useEffect(() => {
 		renderAllSlide()
@@ -44,7 +40,6 @@ function WebPptx(props) {
 	 */
 	const renderAllSlide = () => {
 		let pptxData = flattenTree(rightData)
-		console.log(pptxData, '=======pptxData=======')
 		return (
 			<>
 				<SwiperSlide>
@@ -55,7 +50,7 @@ function WebPptx(props) {
 				{
 					_.map(pptxData, (o, idx)=>{
 						return (
-							<div key={idx}>
+							<div key={o?.id + idx}>
 								<SwiperSlide >
 									<div className="common-slide">
 										<div className="common">
@@ -70,7 +65,7 @@ function WebPptx(props) {
 														})
 													}
 													return (
-														<>
+														<div key={p?.id}>
 															{
 																p?.text && <div className="common-content" key={p?.id}
 																  style={{fontSize: textCount > 160 ? "8px" : textCount > 120 ? "10px" : "16px",
@@ -91,7 +86,7 @@ function WebPptx(props) {
 															{
 																p?.type === "image" && <img className="common-img" src={p?.src} alt=""/>
 															}
-														</>
+														</div>
 													)
 												})}
 											</div>
@@ -115,8 +110,6 @@ function WebPptx(props) {
 					type: 'fraction',
 				}}
 				modules={[Navigation, Pagination]}
-				onSlideChange={() => console.log('slide change')}
-				onSwiper={(swiper) => console.log(swiper)}
 			>
 				{renderAllSlide()}
 			</Swiper>

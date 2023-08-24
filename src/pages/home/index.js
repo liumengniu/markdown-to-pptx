@@ -21,7 +21,6 @@ let pres;
  */
 function Home() {
 	const tree = utils.parseMarkdownToTree(mdStr) || []
-	console.log(tree, "===========tree=========")
 	const [leftData, setLeftData] = useState(tree)
 	const [rightData, setRightData] = useState(tree)
 	const [html, setHtml] = useState(null)
@@ -42,7 +41,7 @@ function Home() {
 	 * useClickAway 点击
 	 */
 	useClickAway(() => {
-	
+		hideOptions()
 	}, ref);
 
 	// const
@@ -209,6 +208,9 @@ function Home() {
 	 */
 	const setTreeData = (treeData, value, id, type) => {
 		return _.map(treeData, o=>{
+			if(o.showOptions){
+				o.showOptions = false
+			}
 			if(o.id === id){
 				if (type === "edit") { //编辑
 					o.text = value
@@ -222,6 +224,11 @@ function Home() {
 	}
 	/**
 	 * 操作目录树节点
+	 * @param treeData
+	 * @param item
+	 * @param idx
+	 * @param type
+	 * @returns {*}
 	 */
 	const operateTreeData = (treeData, item, idx, type) =>{
 		let isMatch = false
@@ -252,12 +259,36 @@ function Home() {
 	}
 	/**
 	 * 显示options
+	 * @param id
 	 */
 	const showOptions = id => {
 		let oldData = _.cloneDeep(rightData)
 		let newData = setTreeData(oldData, null, id, "show")
 		setLeftData(newData)
 		setRightData(newData)
+	}
+	/**
+	 * 隐藏全部options
+	 * @param id
+	 */
+	const hideOptions = () => {
+		let oldData = _.cloneDeep(rightData)
+		let newData = hideTreeOptions(oldData)
+		setLeftData(newData)
+		setRightData(newData)
+	}
+	/**
+	 * 递归隐藏全部options
+	 * @param treeData
+	 */
+	const hideTreeOptions = treeData => {
+		return  _.map(treeData, o => {
+			if(o.showOptions){
+				o.showOptions = false
+			}
+			o.children = hideTreeOptions(o.children)
+			return o;
+		})
 	}
 	/**
 	 * 添加节点
@@ -353,20 +384,12 @@ function Home() {
 			</div>
 		})
 	}
-	/**
-	 * 输出新的markdown的 str
-	 */
-	const handleExport = () => {
-		let newStr = toMarkdown(_.cloneDeep(rightData))
-		alert(`输出markdown： \n${newStr}`)
-	}
 	
 
 	return (
 		<div className="md">
 
-			<div className="md-left">
-				{/*<div className="btn" onClick={handleExport}>输出新markdown</div>*/}
+			<div className="md-left" ref={ref}>
 				<div className="btn two" onClick={exportPptx}>输出pptx</div>
 				{renderTree(leftData)}
 			</div>
