@@ -16,6 +16,7 @@ import EditorTree from "@comp/editor-tree";
 import cover_bg from "./../../statics/images/cover_bg.png"
 import logo from "./../../statics/images/logo.png"
 import title_bg from "./../../statics/images/title_bg.png"
+import slide_bg from "./../../statics/images/slide_bg.png"
 
 const short = require('short-uuid');
 let pres;
@@ -74,10 +75,20 @@ function Home() {
 	
 	const defineSlideMaster = () =>{
 		pres.defineSlideMaster({
-			title: "MASTER_SLIDE",
+			title: "MASTER_COVER",
 			background: { color: "FFFFFF" },
 			objects: [
 				{ image: { x: 0, y: 0, w: 10, h: 5.625, path: cover_bg } },
+				{ image: { x: 9.0, y: 0.3,w: 0.65, h: 0.55, path: logo } },
+				{ image: { x: 0.6, y: 0.6,w: 0.65, h: 0.55, path: title_bg } },
+			],
+			slideNumber: { x: 0.3, y: "90%" },
+		});
+		pres.defineSlideMaster({
+			title: "MASTER_SLIDE",
+			background: { color: "FFFFFF" },
+			objects: [
+				{ image: { x: 0, y: 0, w: 10, h: 5.625, path: slide_bg } },
 				{ image: { x: 9.0, y: 0.3,w: 0.65, h: 0.55, path: logo } },
 				{ image: { x: 0.6, y: 0.6,w: 0.65, h: 0.55, path: title_bg } },
 			],
@@ -119,16 +130,14 @@ function Home() {
 	 * 绘制pptx封面
 	 */
 	const renderCover = item => {
-		let slide = pres.addSlide({ masterName: "MASTER_SLIDE" });
-		slide.addText(_.get(item, 'text'), {
-			x: 0, y: '40%', w: "100%", color: "#666", fontSize: 64, align: "center"});
+		let slide = pres.addSlide({ masterName: "MASTER_COVER" });
+		slide.addText(_.get(item, 'text'), {x: 0, y: '40%', w: "100%", color: "#666", fontSize: 64, align: "center"});
 	}
 	/**
 	 * 绘制目录界面
 	 */
 	const renderDirectory = directoryData => {
-		console.log("========绘制目录界面===========")
-		let slide = pres.addSlide({ masterName: "MASTER_SLIDE" });
+		let slide = pres.addSlide({ masterName: "MASTER_COVER" });
 		slide && slide.addText("目录", {
 			x: "9%", y: '10%', w: "80%", h: "80%", color: "#666", fontSize: 30, valign: "top"
 		});
