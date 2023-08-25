@@ -101,7 +101,6 @@ function Home() {
 				{ image: { x: 9.0, y: 0.3,w: 0.65, h: 0.55, path: logo } },
 				{ image: { x: 0.6, y: 0.6,w: 0.65, h: 0.55, path: title_bg } },
 			],
-			slideNumber: { x: 0.3, y: "90%" },
 		});
 		pres.defineSlideMaster({
 			title: "MASTER_SLIDE",
@@ -111,7 +110,6 @@ function Home() {
 				{ image: { x: 9.0, y: 0.3,w: 0.65, h: 0.55, path: logo } },
 				{ image: { x: 0.6, y: 0.6,w: 0.65, h: 0.55, path: title_bg } },
 			],
-			slideNumber: { x: 0.3, y: "90%" },
 		});
 	}
 
@@ -157,12 +155,12 @@ function Home() {
 	 */
 	const renderDirectory = directoryData => {
 		let slide = pres.addSlide({ masterName: "MASTER_COVER" });
-		slide && slide.addText("目录", {
+		let texts = _.map(directoryData || [], o => ({text: o.text, options: {breakLine: true, autoFit: true}}));
+		let idx = _.findIndex(directoryData, o=> _.indexOf(o?.text, "目录") >-1);
+		idx > -1 && slide && slide.addText("目录", {
 			x: "9%", y: '10%', w: "80%", h: "80%", color: "#666", fontSize: 30, valign: "top"
 		});
-		slide.addText(_.map(directoryData || [], o => ({text: o.text, options: {breakLine: true}})),
-			{x: "10%", y: "24%", w: 8.5, h: 2.0, margin: 0.1}
-		);
+		slide.addText(texts, {x: "10%", y: "24%", w: "80%", h: "60%", margin: 0.1, autoFit: true});
 	}
 	/**
 	 * 绘制底层幻灯
