@@ -36,7 +36,6 @@ function WebPptx(props) {
 		return list
 	}
 	const [pptxData, setData] = useState(flattenTree(rightData))
-	console.log(pptxData,'pptxDatapptxDatapptxDatapptxDatapptxData')
 	
 	/**
 	 * 获取单页幻灯片字数统计

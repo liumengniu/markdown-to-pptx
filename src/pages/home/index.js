@@ -155,12 +155,25 @@ function Home() {
 	 */
 	const renderDirectory = directoryData => {
 		let slide = pres.addSlide({ masterName: "MASTER_COVER" });
-		let texts = _.map(directoryData || [], o => ({text: o.text, options: {breakLine: true, autoFit: true}}));
-		let idx = _.findIndex(directoryData, o=> _.indexOf(o?.text, "目录") >-1);
-		idx > -1 && slide && slide.addText("目录", {
+		let texts = _.map(directoryData || [], (o, idx) => ({text: o.text + "             ", options: {
+				w: 100,
+				breakLine: _.size(directoryData) < 8 || (_.size(directoryData) >= 8 && idx % 2 === 0),
+				autoFit: true
+			}
+		}));
+		let idx = _.findIndex(directoryData, o=> _.includes(o?.text, "目录"));
+		idx <0 && slide && slide.addText("目录", {
 			x: "9%", y: '10%', w: "80%", h: "80%", color: "#666", fontSize: 30, valign: "top"
 		});
-		slide.addText(texts, {x: "10%", y: "24%", w: "80%", h: "60%", margin: 0.1, autoFit: true});
+		_.size(directoryData) > 8 ? slide.addText(texts, {
+				x: "10%",
+				y: "24%",
+				w: "80%",
+				h: "60%",
+				margin: 10,
+				autoFit: true
+			}) :
+			slide.addText(texts, {x: "10%", y: "24%", w: 8.5, h: 2.0, margin: 0.1});
 	}
 	/**
 	 * 绘制底层幻灯
