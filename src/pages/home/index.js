@@ -33,13 +33,42 @@ function Home() {
 	const [html, setHtml] = useState(null)
 	const ref = useRef(null)
 	
-
 	/**
-	 * useEffect
+	 * 初始化数据
 	 */
-	useEffect(() => {
-		initData();
-	}, [])
+	useEffect(()=>{
+		getAIGCData()
+	},[])
+	
+	/**
+	 * 通过AIGC获取markdown数据
+	 */
+	const getAIGCData = () => {
+		let params = {
+			profession: "程序员",
+			topic: "开源项目管理",
+			model_name: "gpt-3.5-turbo",
+			language: "chinese"
+		}
+		/**
+		 * todo 简单测试，后期删除
+		 */
+		fetch("http://139.159.139.184:5000/generate_markdown", {
+			method: 'POST', headers: {
+				'Content-Type': 'application/json'
+			}, body: JSON.stringify(params)
+		}).then(res => {
+			console.log(res, '=---------------------=======================')
+			return res.json()
+		}).then(res => {
+			console.log(res, 'resresresresresresresresresresresres')
+		}).catch(e => {
+			console.log("请求服务异常")
+		})
+	}
+	/**
+	 * 初始化 pptxgen
+	 */
 	useEffect(() => {
 		initPres();
 	}, [])
@@ -50,17 +79,7 @@ function Home() {
 	useClickAway(() => {
 		hideOptions()
 	}, ref);
-
-	// const
-
-	/**
-	 * 初始化数据
-	 */
-	const initData = () => {
-		const tree = fromMarkdown(mdStr)
-		renderHtml(tree)
-	}
-
+	
 	/**
 	 * 实例化pres
 	 */

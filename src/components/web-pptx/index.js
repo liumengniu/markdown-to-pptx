@@ -11,7 +11,7 @@ import {Navigation, Pagination} from "swiper";
 import "swiper/css/navigation";
 // Import Swiper styles
 import 'swiper/css';
-import {useEffect, useRef, useState} from "react";
+import { useRef, useState} from "react";
 import utils from "@utils";
 import _ from "lodash";
 
@@ -20,6 +20,7 @@ function WebPptx(props) {
 	const {rightData} = props
 	const [activeIndex, setActiveIndex] = useState(0)
 	const ref = useRef();
+	
 	
 	/**
 	 * 展平树结构 -> pptx所需数组
