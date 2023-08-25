@@ -1,4 +1,5 @@
 import _ from "lodash";
+import {forwardRef, useImperativeHandle} from "react";
 
 /**
  * description： markdown可编辑目录树
@@ -6,9 +7,12 @@ import _ from "lodash";
  * @date 2023/8/24
  */
 
-function EditorTree(props) {
+const EditorTree = forwardRef(function(props, refP) {
 	const {leftData, showOptions, addItem, addChildItem, removeItem, handleEditMd} = props;
 	
+	useImperativeHandle(refP, ()=>({
+	
+	}))
 	/**
 	 * 渲染左侧目录树
 	 * contentEditable={true}会有光标闪现最前端的BUG，所以可编辑的div做成非受控组件（PS：递归渲染的div似乎很难解决此问题）
@@ -73,6 +77,6 @@ function EditorTree(props) {
 			{renderTree(leftData)}
 		</div>
 	)
-}
+})
 
 export default EditorTree;
