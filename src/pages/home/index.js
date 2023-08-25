@@ -154,7 +154,7 @@ function Home() {
 	 * 绘制目录界面
 	 */
 	const renderDirectory = directoryData => {
-		let slide = pres.addSlide({ masterName: "MASTER_COVER" });
+		let slide = pres.addSlide({ masterName: "MASTER_SLIDE" });
 		let texts = _.map(directoryData || [], (o, idx) => ({text: o.text + "             ", options: {
 				w: 100,
 				breakLine: _.size(directoryData) < 8 || (_.size(directoryData) >= 8 && idx % 2 === 0),

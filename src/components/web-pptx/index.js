@@ -20,8 +20,8 @@ function WebPptx(props) {
 	const {rightData} = props
 	const [activeIndex, setActiveIndex] = useState(0)
 	const ref = useRef();
-	
-	
+
+
 	/**
 	 * 展平树结构 -> pptx所需数组
 	 * @param data
@@ -36,7 +36,7 @@ function WebPptx(props) {
 		return list
 	}
 	const [pptxData, setData] = useState(flattenTree(rightData))
-	
+
 	/**
 	 * 获取单页幻灯片字数统计
 	 */
@@ -143,7 +143,7 @@ function WebPptx(props) {
 				<div className="slide-navigator">
 					<div className="slide-navigator-left navigator-arrow" onClick={handleNavigatePrev}>{"←"}</div>
 					<div className="slide-navigator-pagination">
-						{`${activeIndex+1}/${_.size(pptxData)}`}
+						{`${activeIndex + 1}/${_.size(pptxData) + 1}`}
 					</div>
 					<div className="slide-navigator-right navigator-arrow" onClick={handleNavigateNext}>{"→"}</div>
 				</div>
