@@ -12,6 +12,11 @@ import utils from "../../utils";
 import WebPptx from "@comp/web-pptx";
 import EditorTree from "@comp/editor-tree";
 
+//-------------静态资源-------------------------
+import cover_bg from "./../../statics/images/cover_bg.png"
+import logo from "./../../statics/images/logo.png"
+import title_bg from "./../../statics/images/title_bg.png"
+
 const short = require('short-uuid');
 let pres;
 
@@ -62,12 +67,33 @@ function Home() {
 		pres = new pptxgen();
 		return pres
 	}
+	
+	/**
+	 * 定义母版
+	 */
+	
+	const defineSlideMaster = () =>{
+		pres.defineSlideMaster({
+			title: "MASTER_SLIDE",
+			background: { color: "FFFFFF" },
+			objects: [
+				{ image: { x: 0, y: 0, w: 10, h: 5.625, path: cover_bg } },
+				{ image: { x: 9.0, y: 0.3,w: 0.65, h: 0.55, path: logo } },
+				{ image: { x: 0.6, y: 0.6,w: 0.65, h: 0.55, path: title_bg } },
+			],
+			slideNumber: { x: 0.3, y: "90%" },
+		});
+	}
 
 	/**
 	 * 生成全部幻灯片
 	 */
 	const renderAllSlide = () => {
+		defineSlideMaster()
 		!_.isEmpty(rightData) && renderSlide(rightData)
+		
+		// let slide = pres.addSlide({ masterName: "MASTER_SLIDE" });
+		// slide.addText("How To Create PowerPoint Presentations with JavaScript", { x: 0.5, y: 0.7, fontSize: 18 });
 	}
 	/**
 	 * 递归绘制幻灯片
@@ -93,8 +119,7 @@ function Home() {
 	 * 绘制pptx封面
 	 */
 	const renderCover = item => {
-		let slide = pres.addSlide();
-		slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
+		let slide = pres.addSlide({ masterName: "MASTER_SLIDE" });
 		slide.addText(_.get(item, 'text'), {
 			x: 0, y: '40%', w: "100%", color: "#666", fontSize: 64, align: "center"});
 	}
@@ -103,8 +128,7 @@ function Home() {
 	 */
 	const renderDirectory = directoryData => {
 		console.log("========绘制目录界面===========")
-		let slide = pres.addSlide();
-		slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
+		let slide = pres.addSlide({ masterName: "MASTER_SLIDE" });
 		slide && slide.addText("目录", {
 			x: "9%", y: '10%', w: "80%", h: "80%", color: "#666", fontSize: 30, valign: "top"
 		});
@@ -117,8 +141,7 @@ function Home() {
 	 * @param item
 	 */
 	const renderChildSlide = item => {
-		let slide = pres.addSlide();
-		slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
+		let slide = pres.addSlide({ masterName: "MASTER_SLIDE" });
 		slide && slide.addText(_.get(item, 'text'), {
 			x: "9%", y: '10%', w: "80%", h: "80%", color: "#666", fontSize: 30, valign: "top"
 		});
