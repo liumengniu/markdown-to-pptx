@@ -46,7 +46,7 @@ function Home() {
 	const getAIGCData = () => {
 		let params = {
 			profession: "程序员",
-			topic: "开源项目管理",
+			topic: "新人如何直播",
 			model_name: "gpt-3.5-turbo",
 			language: "chinese"
 		}
