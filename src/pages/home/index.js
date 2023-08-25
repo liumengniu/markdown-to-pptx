@@ -53,7 +53,7 @@ function Home() {
 		/**
 		 * todo 简单测试，后期删除
 		 */
-		fetch("http://139.159.139.184:5000/generate_markdown", {
+		fetch(process.env.REACT_APP_BASE_API, {
 			method: 'POST', headers: {
 				'Content-Type': 'application/json'
 			}, body: JSON.stringify(params)
