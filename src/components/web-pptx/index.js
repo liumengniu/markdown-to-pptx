@@ -18,7 +18,7 @@ import _ from "lodash";
 function WebPptx(props) {
 	let list = [];
 	const {rightData} = props
-	const [activeIndex, setActiveIndex] = useState(1)
+	const [activeIndex, setActiveIndex] = useState(0)
 	const ref = useRef();
 	
 	/**
@@ -143,7 +143,7 @@ function WebPptx(props) {
 				<div className="slide-navigator">
 					<div className="slide-navigator-left navigator-arrow" onClick={handleNavigatePrev}>{"←"}</div>
 					<div className="slide-navigator-pagination">
-						{`${activeIndex}/${_.size(pptxData)}`}
+						{`${activeIndex+1}/${_.size(pptxData)}`}
 					</div>
 					<div className="slide-navigator-right navigator-arrow" onClick={handleNavigateNext}>{"→"}</div>
 				</div>
