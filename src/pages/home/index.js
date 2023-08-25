@@ -32,14 +32,14 @@ function Home() {
 	const [rightData, setRightData] = useState(tree)
 	const [html, setHtml] = useState(null)
 	const ref = useRef(null)
-	
+
 	/**
 	 * 初始化数据
 	 */
 	useEffect(()=>{
 		getAIGCData()
 	},[])
-	
+
 	/**
 	 * 通过AIGC获取markdown数据
 	 */
@@ -79,7 +79,7 @@ function Home() {
 	useClickAway(() => {
 		hideOptions()
 	}, ref);
-	
+
 	/**
 	 * 实例化pres
 	 */
@@ -87,18 +87,18 @@ function Home() {
 		pres = new pptxgen();
 		return pres
 	}
-	
+
 	/**
 	 * 定义母版
 	 */
-	
+
 	const defineSlideMaster = () =>{
 		pres.defineSlideMaster({
 			title: "MASTER_COVER",
 			background: { color: "FFFFFF" },
 			objects: [
 				{ image: { x: 0, y: 0, w: 10, h: 5.625, path: cover_bg } },
-				{ image: { x: 9.0, y: 0.3,w: 0.65, h: 0.55, path: logo } },
+				{ image: { x: 9.0, y: 0.3,w: 0.65, h: 0.65, path: logo } },
 				{ image: { x: 0.6, y: 0.6,w: 0.65, h: 0.55, path: title_bg } },
 			],
 		});
@@ -107,7 +107,7 @@ function Home() {
 			background: { color: "FFFFFF" },
 			objects: [
 				{ image: { x: 0, y: 0, w: 10, h: 5.625, path: slide_bg } },
-				{ image: { x: 9.0, y: 0.3,w: 0.65, h: 0.55, path: logo } },
+				{ image: { x: 9.0, y: 0.3,w: 0.65, h: 0.65, path: logo } },
 				{ image: { x: 0.6, y: 0.6,w: 0.65, h: 0.55, path: title_bg } },
 			],
 		});
@@ -119,7 +119,7 @@ function Home() {
 	const renderAllSlide = () => {
 		defineSlideMaster()
 		!_.isEmpty(rightData) && renderSlide(rightData)
-		
+
 		// let slide = pres.addSlide({ masterName: "MASTER_SLIDE" });
 		// slide.addText("How To Create PowerPoint Presentations with JavaScript", { x: 0.5, y: 0.7, fontSize: 18 });
 	}
@@ -389,8 +389,8 @@ function Home() {
 		setLeftData(newData)
 		setRightData(newData)
 	}
-	
-	
+
+
 	return (
 		<div className="md">
 
