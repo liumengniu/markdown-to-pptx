@@ -15,6 +15,13 @@ import cover_bg from "@/statics/images/cover_bg.png"
 import logo from "@/statics/images/logo.png"
 import title_bg from "@/statics/images/title_bg.png"
 import slide_bg from "@/statics/images/slide_bg.png"
+import {PacmanLoader} from "react-spinners";
+
+const override = {
+	display: "block",
+	margin: "0 auto",
+	borderColor: "red",
+};
 
 const short = require('short-uuid');
 let pres;
@@ -28,6 +35,7 @@ function Home() {
 	const tree = utils.parseMarkdownToTree(mdStr) || []
 	const [leftData, setLeftData] = useState(tree)
 	const [rightData, setRightData] = useState(tree)
+	const [loading, setLoading] = useState(true)
 	const [html, setHtml] = useState(null)
 	const ref = useRef(null)
 
@@ -42,9 +50,10 @@ function Home() {
 	 * 通过AIGC获取markdown数据
 	 */
 	const getAIGCData = () => {
+		setLoading(true)
 		let params = {
 			profession: "行业专家",
-			topic: "新人如何直播",
+			topic: "心如如何学习编程",
 			model_name: "gpt-3.5-turbo",
 			language: "chinese"
 		}
@@ -58,10 +67,12 @@ function Home() {
 		}).then(res => {
 			return res.text()
 		}).then(res => {
+			setLoading(false)
 			let newData = utils.parseMarkdownToTree(res)
 			setLeftData(newData)
 			setRightData(newData)
 		}).catch(e => {
+			setLoading(false)
 			console.log("请求服务异常")
 		})
 	}
@@ -226,18 +237,11 @@ function Home() {
 	 * 导出pptx至本地
 	 */
 	const exportPptx = () => {
+		setLoading(true)
 		renderAllSlide()
-		pres.writeFile({fileName: "AIGC-PPTX.pptx"});
-		console.log("执行导出pptx")
-		// pres.write("base64")
-		// 	.then((data) => {
-		// 		console.log("write as base64: Here are 0-100 chars of `data`:\n");
-		// 		console.log(data.substring(0, 100));
-		// 		console.log(data)
-		// 	})
-		// 	.catch((err) => {
-		// 		console.error(err);
-		// 	});
+		pres.writeFile({fileName: "AIGC-PPTX.pptx"}).then(fileName => {
+			setLoading(false)
+		});
 	}
 	/**
 	 * 根据左侧的编辑 - 渲染最新的html
@@ -391,17 +395,23 @@ function Home() {
 
 
 	return (
-		<div className="md">
-
-			<div className="md-left" ref={ref}>
-				<div className="btn two" onClick={exportPptx}>输出pptx</div>
-				<EditorTree leftData={leftData} showOptions={showOptions} addItem={addItem} addChildItem={addChildItem}
-				            removeItem={removeItem} handleEditMd={handleEditMd}/>
+		<>
+			<div className="md">
+				<div className="md-left" ref={ref}>
+					<div className="btn two" onClick={exportPptx}>输出pptx</div>
+					<EditorTree leftData={leftData} showOptions={showOptions} addItem={addItem} addChildItem={addChildItem}
+					            removeItem={removeItem} handleEditMd={handleEditMd}/>
+				</div>
+				<div className="md-right">
+					<WebPptx rightData={rightData}/>
+				</div>
 			</div>
-			<div className="md-right">
-				<WebPptx rightData={rightData}/>
-			</div>
-		</div>
+			{
+				loading && <div className="sweet-loading">
+					<PacmanLoader override={override} color="#1677ff" loading={loading} label="请稍候..."/>
+				</div>
+			}
+		</>
 	)
 }
 
