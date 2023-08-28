@@ -1,8 +1,6 @@
 import mdStr from "@/mocks/markdown"
 import "./index.scss"
 import {useEffect, useRef, useState} from "react";
-import {fromMarkdown} from 'mdast-util-from-markdown'
-import {toMarkdown} from "mdast-util-to-markdown"
 import {toHtml} from 'hast-util-to-html'
 import {toHast} from 'mdast-util-to-hast'
 import _ from "lodash"
@@ -13,10 +11,10 @@ import WebPptx from "@comp/web-pptx";
 import EditorTree from "@comp/editor-tree";
 
 //-------------静态资源-------------------------
-import cover_bg from "./../../statics/images/cover_bg.png"
-import logo from "./../../statics/images/logo.png"
-import title_bg from "./../../statics/images/title_bg.png"
-import slide_bg from "./../../statics/images/slide_bg.png"
+import cover_bg from "@/statics/images/cover_bg.png"
+import logo from "@/statics/images/logo.png"
+import title_bg from "@/statics/images/title_bg.png"
+import slide_bg from "@/statics/images/slide_bg.png"
 
 const short = require('short-uuid');
 let pres;
@@ -45,7 +43,7 @@ function Home() {
 	 */
 	const getAIGCData = () => {
 		let params = {
-			profession: "程序员",
+			profession: "行业专家",
 			topic: "新人如何直播",
 			model_name: "gpt-3.5-turbo",
 			language: "chinese"
