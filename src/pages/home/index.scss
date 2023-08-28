@@ -31,9 +31,6 @@
 			&:hover{
 				color: white;
 			}
-			&.two{
-				//top: 60px;
-			}
 		}
 
 		.tree{
@@ -139,18 +136,21 @@
 			}
 		}
 	}
-	//&-middle{
-	//	width: 30%;
-	//	padding: 20px;
-	//	box-sizing: border-box;
-	//	word-wrap: break-word;
-	//	max-height: 100vh;
-	//	overflow-y: auto;
-	//}
 	&-right{
 		width: 40%;
 		padding: 20px;
 		box-sizing: border-box;
 		overflow-x: hidden;
 	}
+}
+
+.sweet-loading{
+	width: 100%;
+	height: 100%;
+	margin: 0 auto;
+	position: absolute;
+	top: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }

@@ -1,8 +1,6 @@
 import mdStr from "@/mocks/markdown"
 import "./index.scss"
 import {useEffect, useRef, useState} from "react";
-import {fromMarkdown} from 'mdast-util-from-markdown'
-import {toMarkdown} from "mdast-util-to-markdown"
 import {toHtml} from 'hast-util-to-html'
 import {toHast} from 'mdast-util-to-hast'
 import _ from "lodash"
@@ -11,6 +9,19 @@ import pptxgen from "pptxgenjs";
 import utils from "../../utils";
 import WebPptx from "@comp/web-pptx";
 import EditorTree from "@comp/editor-tree";
+
+//-------------静态资源-------------------------
+import cover_bg from "@/statics/images/cover_bg.png"
+import logo from "@/statics/images/logo.png"
+import title_bg from "@/statics/images/title_bg.png"
+import slide_bg from "@/statics/images/slide_bg.png"
+import {PacmanLoader} from "react-spinners";
+
+const override = {
+	display: "block",
+	margin: "0 auto",
+	borderColor: "red",
+};
 
 const short = require('short-uuid');
 let pres;
@@ -24,16 +35,50 @@ function Home() {
 	const tree = utils.parseMarkdownToTree(mdStr) || []
 	const [leftData, setLeftData] = useState(tree)
 	const [rightData, setRightData] = useState(tree)
+	const [loading, setLoading] = useState(true)
 	const [html, setHtml] = useState(null)
 	const ref = useRef(null)
-	
 
 	/**
-	 * useEffect
+	 * 初始化数据
 	 */
-	useEffect(() => {
-		initData();
-	}, [])
+	useEffect(()=>{
+		getAIGCData()
+	},[])
+
+	/**
+	 * 通过AIGC获取markdown数据
+	 */
+	const getAIGCData = () => {
+		setLoading(true)
+		let params = {
+			profession: "行业专家",
+			topic: "心如如何学习编程",
+			model_name: "gpt-3.5-turbo",
+			language: "chinese"
+		}
+		/**
+		 * todo 简单测试，后期删除
+		 */
+		fetch(process.env.REACT_APP_BASE_API, {
+			method: 'POST', headers: {
+				'Content-Type': 'application/json'
+			}, body: JSON.stringify(params)
+		}).then(res => {
+			return res.text()
+		}).then(res => {
+			setLoading(false)
+			let newData = utils.parseMarkdownToTree(res)
+			setLeftData(newData)
+			setRightData(newData)
+		}).catch(e => {
+			setLoading(false)
+			console.log("请求服务异常")
+		})
+	}
+	/**
+	 * 初始化 pptxgen
+	 */
 	useEffect(() => {
 		initPres();
 	}, [])
@@ -45,16 +90,6 @@ function Home() {
 		hideOptions()
 	}, ref);
 
-	// const
-
-	/**
-	 * 初始化数据
-	 */
-	const initData = () => {
-		const tree = fromMarkdown(mdStr)
-		renderHtml(tree)
-	}
-
 	/**
 	 * 实例化pres
 	 */
@@ -64,10 +99,39 @@ function Home() {
 	}
 
 	/**
+	 * 定义母版
+	 */
+
+	const defineSlideMaster = () =>{
+		pres.defineSlideMaster({
+			title: "MASTER_COVER",
+			background: { color: "FFFFFF" },
+			objects: [
+				{ image: { x: 0, y: 0, w: 10, h: 5.625, path: cover_bg } },
+				{ image: { x: 9.0, y: 0.3,w: 0.65, h: 0.65, path: logo } },
+				{ image: { x: 0.6, y: 0.6,w: 0.65, h: 0.55, path: title_bg } },
+			],
+		});
+		pres.defineSlideMaster({
+			title: "MASTER_SLIDE",
+			background: { color: "FFFFFF" },
+			objects: [
+				{ image: { x: 0, y: 0, w: 10, h: 5.625, path: slide_bg } },
+				{ image: { x: 9.0, y: 0.3,w: 0.65, h: 0.65, path: logo } },
+				{ image: { x: 0.6, y: 0.6,w: 0.65, h: 0.55, path: title_bg } },
+			],
+		});
+	}
+
+	/**
 	 * 生成全部幻灯片
 	 */
 	const renderAllSlide = () => {
+		defineSlideMaster()
 		!_.isEmpty(rightData) && renderSlide(rightData)
+
+		// let slide = pres.addSlide({ masterName: "MASTER_SLIDE" });
+		// slide.addText("How To Create PowerPoint Presentations with JavaScript", { x: 0.5, y: 0.7, fontSize: 18 });
 	}
 	/**
 	 * 递归绘制幻灯片
@@ -93,32 +157,40 @@ function Home() {
 	 * 绘制pptx封面
 	 */
 	const renderCover = item => {
-		let slide = pres.addSlide();
-		slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
-		slide.addText(_.get(item, 'text'), {
-			x: 0, y: '40%', w: "100%", color: "#666", fontSize: 64, align: "center"});
+		let slide = pres.addSlide({ masterName: "MASTER_COVER" });
+		slide.addText(_.get(item, 'text'), {x: 0, y: '40%', w: "100%", color: "#666", fontSize: 64, align: "center"});
 	}
 	/**
 	 * 绘制目录界面
 	 */
 	const renderDirectory = directoryData => {
-		console.log("========绘制目录界面===========")
-		let slide = pres.addSlide();
-		slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
-		slide && slide.addText("目录", {
+		let slide = pres.addSlide({ masterName: "MASTER_SLIDE" });
+		let texts = _.map(directoryData || [], (o, idx) => ({text: o.text + "             ", options: {
+				w: 100,
+				breakLine: _.size(directoryData) < 8 || (_.size(directoryData) >= 8 && idx % 2 === 0),
+				autoFit: true
+			}
+		}));
+		let idx = _.findIndex(directoryData, o=> _.includes(o?.text, "目录"));
+		idx <0 && slide && slide.addText("目录", {
 			x: "9%", y: '10%', w: "80%", h: "80%", color: "#666", fontSize: 30, valign: "top"
 		});
-		slide.addText(_.map(directoryData || [], o => ({text: o.text, options: {breakLine: true}})),
-			{x: "10%", y: "24%", w: 8.5, h: 2.0, margin: 0.1}
-		);
+		_.size(directoryData) > 8 ? slide.addText(texts, {
+				x: "10%",
+				y: "24%",
+				w: "80%",
+				h: "60%",
+				margin: 10,
+				autoFit: true
+			}) :
+			slide.addText(texts, {x: "10%", y: "24%", w: 8.5, h: 2.0, margin: 0.1});
 	}
 	/**
 	 * 绘制底层幻灯
 	 * @param item
 	 */
 	const renderChildSlide = item => {
-		let slide = pres.addSlide();
-		slide.background = {path: 'https://assets.mindshow.fun/themes/greenblue_countryside_vplus_20230720/Cover-bg.jpg'}
+		let slide = pres.addSlide({ masterName: "MASTER_SLIDE" });
 		slide && slide.addText(_.get(item, 'text'), {
 			x: "9%", y: '10%', w: "80%", h: "80%", color: "#666", fontSize: 30, valign: "top"
 		});
@@ -165,18 +237,11 @@ function Home() {
 	 * 导出pptx至本地
 	 */
 	const exportPptx = () => {
+		setLoading(true)
 		renderAllSlide()
-		pres.writeFile({fileName: "AIGC-PPTX.pptx"});
-		console.log("执行导出pptx")
-		// pres.write("base64")
-		// 	.then((data) => {
-		// 		console.log("write as base64: Here are 0-100 chars of `data`:\n");
-		// 		console.log(data.substring(0, 100));
-		// 		console.log(data)
-		// 	})
-		// 	.catch((err) => {
-		// 		console.error(err);
-		// 	});
+		pres.writeFile({fileName: "AIGC-PPTX.pptx"}).then(fileName => {
+			setLoading(false)
+		});
 	}
 	/**
 	 * 根据左侧的编辑 - 渲染最新的html
@@ -327,20 +392,26 @@ function Home() {
 		setLeftData(newData)
 		setRightData(newData)
 	}
-	
-	
-	return (
-		<div className="md">
 
-			<div className="md-left" ref={ref}>
-				<div className="btn two" onClick={exportPptx}>输出pptx</div>
-				<EditorTree leftData={leftData} showOptions={showOptions} addItem={addItem} addChildItem={addChildItem}
-				            removeItem={removeItem} handleEditMd={handleEditMd}/>
+
+	return (
+		<>
+			<div className="md">
+				<div className="md-left" ref={ref}>
+					<div className="btn two" onClick={exportPptx}>输出pptx</div>
+					<EditorTree leftData={leftData} showOptions={showOptions} addItem={addItem} addChildItem={addChildItem}
+					            removeItem={removeItem} handleEditMd={handleEditMd}/>
+				</div>
+				<div className="md-right">
+					<WebPptx rightData={rightData}/>
+				</div>
 			</div>
-			<div className="md-right">
-				<WebPptx rightData={rightData}/>
-			</div>
-		</div>
+			{
+				loading && <div className="sweet-loading">
+					<PacmanLoader override={override} color="#1677ff" loading={loading} aria-label="请稍候"/>
+				</div>
+			}
+		</>
 	)
 }
 
