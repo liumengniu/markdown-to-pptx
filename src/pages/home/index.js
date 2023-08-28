@@ -53,7 +53,7 @@ function Home() {
 		setLoading(true)
 		let params = {
 			profession: "行业专家",
-			topic: "新人如何学习编程",
+			topic: "新人如何直播",
 			model_name: "gpt-3.5-turbo",
 			language: "chinese"
 		}
