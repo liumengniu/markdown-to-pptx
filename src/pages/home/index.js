@@ -408,7 +408,7 @@ function Home() {
 			</div>
 			{
 				loading && <div className="sweet-loading">
-					<PacmanLoader override={override} color="#1677ff" loading={loading} label="请稍候..."/>
+					<PacmanLoader override={override} color="#1677ff" loading={loading} aria-label="请稍候"/>
 				</div>
 			}
 		</>
