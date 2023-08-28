@@ -56,10 +56,11 @@ function Home() {
 				'Content-Type': 'application/json'
 			}, body: JSON.stringify(params)
 		}).then(res => {
-			console.log(res, '=---------------------=======================')
-			return res.json()
+			return res.text()
 		}).then(res => {
-			console.log(res, 'resresresresresresresresresresresres')
+			let newData = utils.parseMarkdownToTree(res)
+			setLeftData(newData)
+			setRightData(newData)
 		}).catch(e => {
 			console.log("请求服务异常")
 		})
